@@ -1,1 +1,40 @@
-<p>payment-gateway works!</p>
+<div class="container mt-5 w-50">
+    <h1 class="text-center fw-bold">Choose your payment type</h1>
+    <div class="mt-5">
+        <!-- Bank Payment Section -->
+        <div class="mb-3">
+            <h5 class="fw-bold">Bank</h5>
+            <div class="option mb-1 d-flex align-items-center">
+                <input type="radio" name="payment" id="card" class="me-2">
+                <label for="card" class="w-100">By Card</label>
+            </div>
+            <div class="option d-flex align-items-center">
+                <input type="radio" name="payment" id="qr-code" class="me-2">
+                <label for="qr-code" class="w-100">By QR Code</label>
+            </div>
+        </div>
+        <!-- Wallet Payment Section -->
+        <div class="mb-3">
+            <h5 class="fw-bold">Wallet</h5>
+            <div class="option d-flex align-items-center">
+                <input type="radio" name="payment" id="wallet" class="me-2">
+                <label for="wallet" class="w-100">Wallet option</label>
+            </div>
+        </div>
+        <!-- Crypto Payment Section -->
+        <div class="mb-3">
+            <h5 class="fw-bold">Crypto</h5>
+            <div class="option d-flex align-items-center">
+                <input type="radio" name="payment" id="crypto" class="me-2">
+                <label for="crypto" class="w-100">Cryptocurrency</label>
+            </div>
+        </div>
+        <!-- Proceed to Payment Button -->
+        <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-primary px-5">Proceed to Payment</button>
+        </div>
+    </div>
+    <div class="position-absolute bottom-0 start-0 mt-3 ms-3">
+        <label class="fw-bold" style="font-size: medium;">Merchant:</label>
+    </div>
+</div>
