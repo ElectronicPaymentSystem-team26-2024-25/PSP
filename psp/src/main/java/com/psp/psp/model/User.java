@@ -2,6 +2,8 @@ package com.psp.psp.model;
 
 import com.psp.psp.enumerations.UserType;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 @Entity
 @Table(name = "users")
@@ -26,7 +28,7 @@ public class User {
     public User(Long id, String email, String password, UserType type) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.password = generateHash(password);
         this.type = type;
     }
 
@@ -60,5 +62,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean validatePassword(String password){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.matches(password, this.password);
+    }
+
+    private String generateHash(String password){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.encode(password);
     }
 }

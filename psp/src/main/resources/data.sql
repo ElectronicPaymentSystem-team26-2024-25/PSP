@@ -1,0 +1,1 @@
+INSERT INTO public.users (id, email, password, type) VALUES (-1, 'johndoe@gmail.com', '$2a$10$XQ69U0lmh/wFb8MuqQb/K.b7ZwZLmJWhxAUiVyVY/nEpmM/xZWlDS', 1);

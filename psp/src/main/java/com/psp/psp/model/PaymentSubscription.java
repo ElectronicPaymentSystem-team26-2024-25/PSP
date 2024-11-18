@@ -1,12 +1,14 @@
 package com.psp.psp.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "payment_subscriptions")
 public class PaymentSubscription {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private Long merchantId;
@@ -17,9 +19,18 @@ public class PaymentSubscription {
     public PaymentSubscription() {
     }
 
-    public PaymentSubscription(Long merchantId, String paymentTypeName) {
+    public PaymentSubscription(Long id, Long merchantId, String paymentTypeName) {
+        this.id = id;
         this.merchantId = merchantId;
         this.paymentTypeName = paymentTypeName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getMerchantId() {
