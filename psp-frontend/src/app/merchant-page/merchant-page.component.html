@@ -1,1 +1,41 @@
-<p>merchant-page works!</p>
+<div class="container mt-5">
+    <h1 class="fw-bold text-start mb-4">Welcome to your account</h1>
+  
+    <!-- Information Section -->
+    <div class="card mb-4 shadow-sm">
+      <h2 class="card-header bg-light fw-bold">Information</h2>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label field-label">Merchant ID:</label>
+          <p class="form-control-plaintext field-value">{{merchant.merchantId}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label field-label">Merchant Password:</label>
+          <p class="form-control-plaintext field-value">{{merchant.merchantPassword}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label field-label">Business Email:</label>
+          <p class="form-control-plaintext field-value">{{merchant.businessEmail}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label field-label">Business Name:</label>
+          <p class="form-control-plaintext field-value">{{merchant.businessName}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label field-label">Legal Name:</label>
+          <p class="form-control-plaintext field-value">{{merchant.legalName}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label field-label">Legal Lastname:</label>
+          <p class="form-control-plaintext field-value">{{merchant.legalLastname}}</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card shadow-sm">
+      <h2 class="card-header bg-light fw-bold">Payment Subscriptions</h2>
+      <div class="card-body">
+        <!-- Just a placeholder -->
+      </div>
+    </div>
+</div>

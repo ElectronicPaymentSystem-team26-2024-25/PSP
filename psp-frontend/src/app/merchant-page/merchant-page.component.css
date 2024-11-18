@@ -1,0 +1,25 @@
+
+.field-label {
+    font-size: 0.65rem; /* Smaller font size */
+    color: #6c757d; /* Bootstrap secondary text color */
+    margin-bottom: 0.25rem;
+  }
+  
+  .field-value {
+    font-size: 1rem;
+    color: #212529; /* Bootstrap text color */
+    border-bottom: 1px solid #ccc; /* Adds a line below the value */
+    padding-bottom: 0.25rem; /* Adds space between the value and the line */
+    display: inline-block; /* Ensures the border works properly */
+    width: 100%; /* Makes the line span across the container */
+  }
+  
+  
+  .card {
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .card-header {
+    border-radius: 10px 10px 0 0; /* Top corners rounded */
+  }
+  
