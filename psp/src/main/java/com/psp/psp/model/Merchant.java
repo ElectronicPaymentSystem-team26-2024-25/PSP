@@ -12,24 +12,24 @@ public class Merchant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private UUID merchantId;
+    @Column(nullable = false, unique = true, name = "merchant_id")
+    private UUID MERCHANT_ID;
 
-    @Column(nullable = false, unique = true)
-    private UUID merchantPassword;
+    @Column(nullable = false, unique = true, name = "merchant_password")
+    private UUID MERCHANT_PASSWORD;
 
     //MerchantTimestamp?
 
-    @Column
+    @Column(name = "business_name")
     private String businessName;
 
-    @Column
+    @Column(name = "business_email")
     private String businessEmail;
 
-    @Column
+    @Column(name = "legal_name")
     private String legalName;
 
-    @Column
+    @Column(name = "legal_lastname")
     private String legalLastname;
 
 
@@ -38,8 +38,8 @@ public class Merchant {
 
     public Merchant(Long id, UUID merchantId, UUID merchantPassword, String businessName, String businessEmail, String legalName, String legalLastname) {
         this.id = id;
-        this.merchantId = merchantId;
-        this.merchantPassword = merchantPassword;
+        this.MERCHANT_ID = merchantId;
+        this.MERCHANT_PASSWORD = merchantPassword;
         this.businessName = businessName;
         this.businessEmail = businessEmail;
         this.legalName = legalName;
@@ -55,19 +55,19 @@ public class Merchant {
     }
 
     public UUID getMerchantId() {
-        return merchantId;
+        return MERCHANT_ID;
     }
 
     public void setMerchantId(UUID merchantId) {
-        this.merchantId = merchantId;
+        this.MERCHANT_ID = merchantId;
     }
 
     public UUID getMerchantPassword() {
-        return merchantPassword;
+        return MERCHANT_PASSWORD;
     }
 
     public void setMerchantPassword(UUID merchantPassword) {
-        this.merchantPassword = merchantPassword;
+        this.MERCHANT_PASSWORD = merchantPassword;
     }
 
     public String getBusinessName() {

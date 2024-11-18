@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IMerchantRepository extends JpaRepository<Merchant, Long> {
+    public Merchant findByBusinessEmail(String businessEmail);
 }
