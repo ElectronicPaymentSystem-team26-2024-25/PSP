@@ -28,9 +28,12 @@ export class MerchantPageComponent implements OnInit{
   }
 
   subscriptions: Subscription[] = [];
+  notSubscriptions: Subscription[] = []
+  featureSubscriptions: Subscription[] = [];
+
+  showAssignModal: boolean = false;
 
   constructor(private service: MerchantService, private auth: AuthServiceService){}
-  
   
   
   ngOnInit(): void {
@@ -53,5 +56,48 @@ export class MerchantPageComponent implements OnInit{
         this.subscriptions = response;
       }
     })
+  }
+
+  addToSubscribe(subscription: Subscription): void {
+      this.featureSubscriptions.push(subscription);
+  }
+
+  removeToSubscribe(subscription: Subscription): void {
+      const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
+      if(index < 0) return;
+      this.featureSubscriptions.splice(index, 1)
+  }
+
+  subscribe(): void{
+
+  }
+
+  showModal(): void{
+    this.service.getNotSubscribedPayments(this.merchant.businessEmail).subscribe({
+      next: (response: Subscription[]) => {
+        if(response == null || response == undefined) return;
+        this.notSubscriptions = response;
+        this.showAssignModal = true;
+      }
+    })
+  }
+
+  hideModal(): void{
+    this.featureSubscriptions = [];
+    this.showAssignModal = false;
+  }
+
+  // If index is > -1 subscriptions is present in featureSubscriptions list
+  checkIfContains(subscription: Subscription): boolean {
+    const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
+    return index > -1;
+  }
+
+  completeItem(subscription: Subscription): void {
+    if(this.checkIfContains(subscription)){
+      this.removeToSubscribe(subscription);
+      return;
+    }
+    this.addToSubscribe(subscription);
   }
 }

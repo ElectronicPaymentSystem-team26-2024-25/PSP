@@ -19,4 +19,8 @@ export class MerchantService {
   getSubscribedPayments(email: string): Observable<Subscription[]>{
     return this.http.get<Subscription[]>(environment.apiHost + 'merchant/payment/subscribed?businessEmail=' + email);
   }
+
+  getNotSubscribedPayments(email: string): Observable<Subscription[]>{
+    return this.http.get<Subscription[]>(environment.apiHost + 'merchant/payment/not/subscribed?businessEmail=' + email);
+  }
 }

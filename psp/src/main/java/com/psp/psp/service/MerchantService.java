@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MerchantService {
@@ -55,6 +57,25 @@ public class MerchantService {
                     );
             dtos.add(PaymentMethodConverter.convertToDto(method));
         }
+        return dtos;
+    }
+
+    public List<PaymentMethodInfoDto> getNotSubscribedPayments(String businessEmail) {
+        Merchant merchant = iMerchantRepository.findByBusinessEmail(businessEmail);
+        if (merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
+
+        List<PaymentSubscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
+        if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
+
+        List<PaymentMethod> paymentMethods = paymentService.readPaymentMethods();
+        if (paymentMethods == null || paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
+
+        List<PaymentMethodInfoDto> dtos = new ArrayList<>();
+        Set<Long> subscribedMethodIds = subscriptions.stream()
+                .map(PaymentSubscription::getPaymentMethodId)
+                .collect(Collectors.toSet());
+        paymentMethods.removeIf(paymentMethod -> subscribedMethodIds.contains(paymentMethod.getId()));
+        paymentMethods.forEach(method -> dtos.add(PaymentMethodConverter.convertToDto(method)));
         return dtos;
     }
 }

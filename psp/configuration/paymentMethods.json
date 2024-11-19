@@ -12,5 +12,12 @@
     "apiEndpointUrl": "https://api.crypto.com",
     "type": "crypto",
     "isActive": false
+  },
+  {
+    "id": 3,
+    "name": "BitcoinProcessor2.0",
+    "apiEndpointUrl": "https://api.crypto.com",
+    "type": "crypto",
+    "isActive": false
   }
 ]

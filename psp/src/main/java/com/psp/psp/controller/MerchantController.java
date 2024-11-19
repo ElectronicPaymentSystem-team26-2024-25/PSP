@@ -35,4 +35,10 @@ public class MerchantController {
             @RequestParam String businessEmail, HttpServletResponse response){
         return ResponseEntity.ok(merchantService.getSubscribedPayments(businessEmail));
     }
+
+    @GetMapping("/payment/not/subscribed")
+    public ResponseEntity<List<PaymentMethodInfoDto>> getNotSubscribedPayments(
+            @RequestParam String businessEmail, HttpServletResponse response){
+        return ResponseEntity.ok(merchantService.getNotSubscribedPayments(businessEmail));
+    }
 }
