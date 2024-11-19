@@ -10,19 +10,27 @@ public class PaymentSubscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "merchant_id")
     private Long merchantId;
 
-    @Column(nullable = false)
-    private String paymentTypeName;
+    @Column(nullable = false, name = "payment_type_id")
+    private Long paymentTypeId;
 
     public PaymentSubscription() {
     }
 
-    public PaymentSubscription(Long id, Long merchantId, String paymentTypeName) {
+    public PaymentSubscription(Long id, Long merchantId, Long paymentTypeId) {
         this.id = id;
         this.merchantId = merchantId;
-        this.paymentTypeName = paymentTypeName;
+        this.paymentTypeId = paymentTypeId;
+    }
+
+    public Long getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public void setPaymentTypeId(Long paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
     }
 
     public Long getId() {
@@ -41,11 +49,4 @@ public class PaymentSubscription {
         this.merchantId = merchantId;
     }
 
-    public String getPaymentTypeName() {
-        return paymentTypeName;
-    }
-
-    public void setPaymentTypeName(String paymentTypeName) {
-        this.paymentTypeName = paymentTypeName;
-    }
 }
