@@ -37,7 +37,7 @@ public class MerchantService {
         ArrayList<PaymentMethodDto> dtos = new ArrayList<>();
         subscriptions.forEach(paymentSubscription -> { //TODO: Change this after creating file that will store information about payment methods
             PaymentMethodDto dto = new PaymentMethodDto();
-            dto.setName("Name of payment + id:" + paymentSubscription.getPaymentTypeId());
+            dto.setName("Name of payment + id:" + paymentSubscription.getPaymentMethodId());
             dtos.add(dto);
         });
         return dtos;

@@ -3,6 +3,7 @@ import { MerchantService } from '../service/merchant.service';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Merchant } from '../model/merchant.model';
 import { User } from '../model/user.model';
+import { Subscription } from '../model/subscription.model';
 
 @Component({
   selector: 'app-merchant-page',
@@ -26,6 +27,8 @@ export class MerchantPageComponent implements OnInit{
     legalLastname: ''
   }
 
+  subscriptions: Subscription[] = [];
+
   constructor(private service: MerchantService, private auth: AuthServiceService){}
   
   
@@ -38,6 +41,16 @@ export class MerchantPageComponent implements OnInit{
       next: (response: Merchant) => {
         if(response == null) return;
         this.merchant = response;
+        this.getSubscribedPayments(this.merchant.businessEmail);
+      }
+    })
+  }
+
+  getSubscribedPayments(email: string): void {
+    this.service.getSubscribedPayments(email).subscribe({
+      next: (response: Subscription[]) => {
+        if(response == null || response == undefined) return;
+        this.subscriptions = response;
       }
     })
   }

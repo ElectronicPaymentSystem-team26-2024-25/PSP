@@ -35,7 +35,8 @@
     <div class="card shadow-sm">
       <h2 class="card-header bg-light fw-bold">Payment Subscriptions</h2>
       <div class="card-body">
-        <!-- Just a placeholder -->
+        <p *ngIf="subscriptions.length < 1">No active subscriptions.</p>
+        <p *ngFor="let subscription of subscriptions">{{subscription.name}}</p>
       </div>
     </div>
 </div>

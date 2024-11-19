@@ -13,8 +13,8 @@ public class PaymentSubscription {
     @Column(nullable = false, name = "merchant_id")
     private Long merchantId;
 
-    @Column(nullable = false, name = "payment_type_id")
-    private Long paymentTypeId;
+    @Column(nullable = false, name = "payment_method_id")
+    private Long paymentMethodId;
 
     public PaymentSubscription() {
     }
@@ -22,15 +22,15 @@ public class PaymentSubscription {
     public PaymentSubscription(Long id, Long merchantId, Long paymentTypeId) {
         this.id = id;
         this.merchantId = merchantId;
-        this.paymentTypeId = paymentTypeId;
+        this.paymentMethodId = paymentTypeId;
     }
 
-    public Long getPaymentTypeId() {
-        return paymentTypeId;
+    public Long getPaymentMethodId() {
+        return paymentMethodId;
     }
 
-    public void setPaymentTypeId(Long paymentTypeId) {
-        this.paymentTypeId = paymentTypeId;
+    public void setPaymentMethodId(Long paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
     }
 
     public Long getId() {
