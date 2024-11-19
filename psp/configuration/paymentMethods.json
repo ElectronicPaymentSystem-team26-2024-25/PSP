@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "PayPal",
+    "apiEndpointUrl": "https://api.paypal.com",
+    "type": "wallet",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "name": "BitcoinProcessor",
+    "apiEndpointUrl": "https://api.crypto.com",
+    "type": "crypto",
+    "isActive": false
+  }
+]

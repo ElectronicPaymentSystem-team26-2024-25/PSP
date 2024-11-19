@@ -12,8 +12,7 @@ public class PaymentMethod {
 
     //TODO: Add credentials_info field, that will be used for authentication between payment method and PSP
 
-    public PaymentMethod(PaymentType type) {
-        this.type = type;
+    public PaymentMethod() {
     }
 
     public PaymentMethod(Long id, String name, String apiEndpointUrl, PaymentType type, boolean isActive) {
@@ -60,7 +59,7 @@ public class PaymentMethod {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
