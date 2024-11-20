@@ -8,12 +8,14 @@ import { MerchantPageComponent } from './merchant-page/merchant-page.component';
 import { AuthModule } from './auth/auth.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './auth/jwt/jwt.interceptor';
+import { NavbarComponent } from './layout/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PaymentGatewayComponent,
-    MerchantPageComponent
+    MerchantPageComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

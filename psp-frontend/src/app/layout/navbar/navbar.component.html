@@ -1,0 +1,12 @@
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom shadow-sm">
+        <div class="login-container">
+            <li class="nav-item" *ngIf="user && user.email === ''">
+                <a class="nav-link" [routerLink]="['login']">Login</a>
+            </li>
+            <li class="nav-item" *ngIf="user && user.email !== ''">
+                <a class="nav-link" (click)="onLogout()">Logout</a>
+            </li>
+        </div>
+    </nav>
+</div>
