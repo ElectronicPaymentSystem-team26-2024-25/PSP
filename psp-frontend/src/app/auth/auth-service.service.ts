@@ -36,6 +36,14 @@ export class AuthServiceService {
       );
   }
 
+  checkIfUserExists(): void {
+    const accessToken = this.tokenStorage.getAccessToken();
+    if (accessToken == null) {
+      return;
+    }
+    this.setUser();
+  }
+
   private setUser(): void {
     const jwtHelperService = new JwtHelperService();
     const accessToken = this.tokenStorage.getAccessToken() || "";
