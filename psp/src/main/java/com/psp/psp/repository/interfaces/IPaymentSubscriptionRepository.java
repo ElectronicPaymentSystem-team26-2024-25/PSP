@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface IPaymentSubscriptionRepository extends JpaRepository<PaymentSubscription, Long> {
     public List<PaymentSubscription> findByMerchantId(Long merchantId);
+    public PaymentSubscription save(PaymentSubscription paymentSubscription);
 }

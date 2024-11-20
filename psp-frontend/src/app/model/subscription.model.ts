@@ -1,4 +1,9 @@
 export interface Subscription{
+    merchantEmail: string;
+    paymentMethods: PaymentMethodInfo[];
+}
+
+export interface PaymentMethodInfo{
     name: string;
     type: string;
 }

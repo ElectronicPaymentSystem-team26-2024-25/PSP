@@ -19,6 +19,11 @@ public class PaymentSubscription {
     public PaymentSubscription() {
     }
 
+    public PaymentSubscription(Long merchantId, Long paymentMethodId) {
+        this.merchantId = merchantId;
+        this.paymentMethodId = paymentMethodId;
+    }
+
     public PaymentSubscription(Long id, Long merchantId, Long paymentTypeId) {
         this.id = id;
         this.merchantId = merchantId;

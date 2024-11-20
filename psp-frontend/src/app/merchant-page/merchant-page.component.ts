@@ -3,7 +3,8 @@ import { MerchantService } from '../service/merchant.service';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Merchant } from '../model/merchant.model';
 import { User } from '../model/user.model';
-import { Subscription } from '../model/subscription.model';
+import { PaymentMethodInfo, Subscription } from '../model/subscription.model';
+import { PaymentService } from '../service/payment.service';
 
 @Component({
   selector: 'app-merchant-page',
@@ -27,13 +28,13 @@ export class MerchantPageComponent implements OnInit{
     legalLastname: ''
   }
 
-  subscriptions: Subscription[] = [];
-  notSubscriptions: Subscription[] = []
-  featureSubscriptions: Subscription[] = [];
+  subscriptions: PaymentMethodInfo[] = [];
+  notSubscriptions: PaymentMethodInfo[] = []
+  featureSubscriptions: PaymentMethodInfo[] = [];
 
   showAssignModal: boolean = false;
 
-  constructor(private service: MerchantService, private auth: AuthServiceService){}
+  constructor(private service: MerchantService, private auth: AuthServiceService, private paymentService: PaymentService){}
   
   
   ngOnInit(): void {
@@ -51,30 +52,42 @@ export class MerchantPageComponent implements OnInit{
 
   getSubscribedPayments(email: string): void {
     this.service.getSubscribedPayments(email).subscribe({
-      next: (response: Subscription[]) => {
+      next: (response: PaymentMethodInfo[]) => {
         if(response == null || response == undefined) return;
         this.subscriptions = response;
       }
     })
   }
 
-  addToSubscribe(subscription: Subscription): void {
+  addToSubscribe(subscription: PaymentMethodInfo): void {
       this.featureSubscriptions.push(subscription);
   }
 
-  removeToSubscribe(subscription: Subscription): void {
+  removeToSubscribe(subscription: PaymentMethodInfo): void {
       const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
       if(index < 0) return;
       this.featureSubscriptions.splice(index, 1)
   }
 
   subscribe(): void{
+      if(this.featureSubscriptions.length < 1) return;
 
+      const subscription: Subscription = {
+        merchantEmail: this.merchant.businessEmail,
+        paymentMethods: this.featureSubscriptions
+      }
+      this.paymentService.subscribe(subscription).subscribe({
+        next: (response: Subscription) => {
+          //Todo: Make some normal response
+          console.log("This is response: " + response);
+          
+        }
+      });
   }
 
   showModal(): void{
     this.service.getNotSubscribedPayments(this.merchant.businessEmail).subscribe({
-      next: (response: Subscription[]) => {
+      next: (response: PaymentMethodInfo[]) => {
         if(response == null || response == undefined) return;
         this.notSubscriptions = response;
         this.showAssignModal = true;
@@ -88,12 +101,12 @@ export class MerchantPageComponent implements OnInit{
   }
 
   // If index is > -1 subscriptions is present in featureSubscriptions list
-  checkIfContains(subscription: Subscription): boolean {
+  checkIfContains(subscription: PaymentMethodInfo): boolean {
     const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
     return index > -1;
   }
 
-  completeItem(subscription: Subscription): void {
+  completeItem(subscription: PaymentMethodInfo): void {
     if(this.checkIfContains(subscription)){
       this.removeToSubscribe(subscription);
       return;
