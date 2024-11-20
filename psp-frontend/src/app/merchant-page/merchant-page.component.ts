@@ -78,9 +78,10 @@ export class MerchantPageComponent implements OnInit{
       }
       this.paymentService.subscribe(subscription).subscribe({
         next: (response: Subscription) => {
-          //Todo: Make some normal response
           console.log("This is response: " + response);
-          
+          if(response == null || response == undefined) return;
+          this.hideModal();
+          response.paymentMethods.forEach(pm => this.subscriptions.push(pm));
         }
       });
   }
