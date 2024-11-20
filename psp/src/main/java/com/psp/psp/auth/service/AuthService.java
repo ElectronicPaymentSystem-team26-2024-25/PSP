@@ -21,7 +21,7 @@ public class AuthService {
         User user = iUserRepository.findByEmail(credentials.getEmail());
         if(user == null || !user.validatePassword(credentials.getPassword())) return null;
 
-        String token = jwtService.GenerateJwtToken(user);
+        String token = jwtService.generateJwtToken(user);
         AuthenticationResponse response = new AuthenticationResponse();
         response.setJwtToken(token);
         return response;
