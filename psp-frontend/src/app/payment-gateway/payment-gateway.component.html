@@ -57,6 +57,7 @@
             <button
                 [disabled]="selectedPaymentMethod.name === ''"
                 class="btn btn-primary px-5"
+                (click)="executePayment()"
             >
                 Proceed to Payment
             </button>
