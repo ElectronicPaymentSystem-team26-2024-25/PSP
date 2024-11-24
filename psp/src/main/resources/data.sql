@@ -4,3 +4,4 @@ INSERT INTO public.merchants (merchant_id, merchant_password, "business_name", "
 
 INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id) VALUES (1, 1);
 INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id) VALUES (1, 2);
+INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id) VALUES (1, 4);

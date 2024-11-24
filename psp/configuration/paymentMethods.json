@@ -19,5 +19,12 @@
     "apiEndpointUrl": "https://api.crypto.com",
     "type": "crypto",
     "isActive": false
+  },
+  {
+    "id": 4,
+    "name": "Bank",
+    "apiEndpointUrl": "https://api.crypto.com",
+    "type": "bank",
+    "isActive": true
   }
 ]

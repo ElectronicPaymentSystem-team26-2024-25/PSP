@@ -16,6 +16,6 @@ public class GatewayController {
     {
         String url = "http://localhost:"+bankPort+"/api/cardpayment/cardpaymentform";
         ResponseEntity<Object> response = restTemplate.postForEntity(url, request, Object.class);
-        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
 }
