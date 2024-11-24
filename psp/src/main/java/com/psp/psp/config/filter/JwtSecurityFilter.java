@@ -58,6 +58,6 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/auth/"); // Exclude paths that should not be filtered
+        return path.startsWith("/auth/") || path.startsWith("/payment/merchant/"); // Exclude paths that should not be filtered
     }
 }

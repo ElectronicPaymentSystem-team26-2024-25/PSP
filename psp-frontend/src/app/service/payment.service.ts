@@ -14,4 +14,8 @@ export class PaymentService {
   subscribe(subscription: Subscription): Observable<Subscription> {
     return this.http.post<Subscription>(environment.apiHost + 'payment/subscribe', subscription);
   }
+
+  getMerchantsSubscribed(merchantPassword: string): Observable<Subscription>{
+    return this.http.get<Subscription>(environment.apiHost + "payment/merchant/subscribed?merchantPassword=" + merchantPassword)
+  }
 }
