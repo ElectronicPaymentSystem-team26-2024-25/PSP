@@ -65,11 +65,11 @@ export class PaymentGatewayComponent implements OnInit{
     //ovo treba da se dobije iz baze psp-a na osnovu merchant Id
     paymentRequest.merchantPassword = '789e1234-e89b-56d3-a456-426614174111'
     // ovo treba da se izgenerise na bekendu
-    paymentRequest.merchantOrderId = 1
+    paymentRequest.merchantOrderId = 2
     paymentRequest.merchantTimestamp = new Date
-    paymentRequest.errorUrl = 'asdf'
-    paymentRequest.failedUrl = 'asdf'
-    paymentRequest.successUrl = 'asdf'
+    paymentRequest.errorUrl = 'http://localhost:4200/error/'+paymentRequest.merchantOrderId
+    paymentRequest.failedUrl = 'http://localhost:4200/fail/'+paymentRequest.merchantOrderId
+    paymentRequest.successUrl = 'http://localhost:4200/success/'+paymentRequest.merchantOrderId
     if(this.selectedPaymentMethod.type == 'bank'){
       this.executePaymentInBank(paymentRequest)
     }

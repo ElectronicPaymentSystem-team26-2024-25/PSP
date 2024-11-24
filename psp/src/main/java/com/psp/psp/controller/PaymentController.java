@@ -2,6 +2,7 @@ package com.psp.psp.controller;
 
 import com.psp.psp.dto.PaymentRequest;
 import com.psp.psp.dto.PaymentResponse;
+import com.psp.psp.dto.PaymentStatusResponse;
 import com.psp.psp.dto.SubscriptionDto;
 import com.psp.psp.service.MerchantService;
 import com.psp.psp.service.PaymentService;
@@ -44,5 +45,11 @@ public class PaymentController {
         String url = "http://localhost:8095/"+request.getPath();
         ResponseEntity<PaymentResponse> response = restTemplate.postForEntity(url, request, PaymentResponse.class);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+    }
+    @PostMapping("/order-status")
+    public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse response){
+        //TODO: sacuvati transakciju u bazi
+        response.toString();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -7,15 +7,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("api/cardpayment")
+@RequestMapping("api")
 public class GatewayController {
     @Autowired
     RestTemplate restTemplate;
-    @PostMapping(consumes = "application/json", path = "/cardpaymentform/{bank}")
+    @PostMapping(consumes = "application/json", path = "/cardpayment/cardpaymentform/{bank}")
     public ResponseEntity<Object> getCardPaymentRequestResponse(@RequestBody Object request, @PathVariable("bank") int bankPort)
     {
         String url = "http://localhost:"+bankPort+"/api/cardpayment/cardpaymentform";
         ResponseEntity<Object> response = restTemplate.postForEntity(url, request, Object.class);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+    }
+    @PostMapping(consumes = "application/json", path = "/payment/order-status")
+    public ResponseEntity<Object> SendDataToPsp(@RequestBody Object request)
+    {
+        String url = "http://localhost:8080/payment/order-status";
+        ResponseEntity<Object> response = restTemplate.postForEntity(url, request, Object.class);
+        return new ResponseEntity<>(response.getStatusCode());
     }
 }

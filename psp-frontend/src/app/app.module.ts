@@ -9,13 +9,19 @@ import { AuthModule } from './auth/auth.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './auth/jwt/jwt.interceptor';
 import { NavbarComponent } from './layout/navbar/navbar.component';
+import { SuccessPageComponent } from './success-page/success-page.component';
+import { FailedPageComponent } from './failed-page/failed-page.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PaymentGatewayComponent,
     MerchantPageComponent,
-    NavbarComponent
+    NavbarComponent,
+    SuccessPageComponent,
+    FailedPageComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
