@@ -2,19 +2,21 @@ package com.psp.psp.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.psp.psp.dto.SubscriptionDto;
-import com.psp.psp.model.Merchant;
-import com.psp.psp.model.PaymentMethod;
-import com.psp.psp.model.PaymentSubscription;
+import com.psp.psp.dto.*;
+import com.psp.psp.model.*;
+import com.psp.psp.repository.interfaces.IMerchantOrderRepository;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
@@ -26,6 +28,8 @@ public class PaymentService {
 
     private final IMerchantRepository iMerchantRepository;
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
+    @Autowired
+    IMerchantOrderRepository iMerchantOrderRepository;
 
     public PaymentService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
         this.iMerchantRepository = iMerchantRepository;
@@ -63,5 +67,32 @@ public class PaymentService {
             iPaymentSubscriptionRepository.save(paymentSubscription);
         });
         return subscriptionDto;
+    }
+    public MerchantOrder saveOrder(CreateOrderRequest orderRequest){
+        Merchant merchant = iMerchantRepository.findByMerchantPassword(UUID.fromString(orderRequest.getMerchantPassword()));
+        if(merchant == null)
+            return null;
+        MerchantOrder order = new MerchantOrder(orderRequest.getOrderId(), LocalDateTime.now(), orderRequest.getAmount(), orderRequest.getMerchantId(),
+                ".", PaymentStatus.IN_PROGRESS);
+        order.setLinkUUID(UUID.randomUUID());
+        System.out.println(order);
+        return iMerchantOrderRepository.save(order);
+    }
+    public CreateOrderResponse generatePSPPaymentLink(String merchantPassword, UUID linkUUID){
+        CreateOrderResponse response = new CreateOrderResponse();
+        response.setUrl("http://localhost:4200/pay.psp?merchant="+merchantPassword+"&order="+linkUUID.toString());
+        return response;
+    }
+    public MerchantOrder getOrder(String linkUUID){
+        return iMerchantOrderRepository.findByLinkUUID(UUID.fromString(linkUUID));
+    }
+    public OrderStatusDto saveOrderStatus(PaymentStatusResponse bankResponse){
+        MerchantOrder order = iMerchantOrderRepository.getReferenceById(bankResponse.getMerchantOrderId());
+        order.setOrderStatus(bankResponse.getStatus());
+        iMerchantOrderRepository.save(order);
+        OrderStatusDto orderDTO = new OrderStatusDto();
+        orderDTO.setOrderId(bankResponse.getMerchantOrderId());
+        orderDTO.setOrderStatus(bankResponse.getStatus().toString());
+        return orderDTO;
     }
 }

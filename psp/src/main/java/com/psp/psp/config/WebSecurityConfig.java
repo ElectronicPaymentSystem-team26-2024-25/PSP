@@ -33,7 +33,7 @@ public class WebSecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.cors(cors -> cors.configurationSource(corsConfiguration()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/", "/home", "/payment/merchant/**", "payment/order-status").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/", "/home", "/payment/merchant/**", "payment/order-status", "payment/create-order", "payment/order/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -14,7 +14,6 @@ public class Merchant {
 
     @Column(nullable = false, unique = true, name = "merchant_id")
     private UUID MERCHANT_ID;
-
     @Column(nullable = false, unique = true, name = "merchant_password")
     private UUID MERCHANT_PASSWORD;
 

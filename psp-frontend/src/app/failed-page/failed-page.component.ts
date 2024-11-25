@@ -14,4 +14,8 @@ export class FailedPageComponent {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('orderId');
   }
+  
+  onFinish(){
+    window.location.href = 'http://localhost:5173/successpage/'+this.id
+  }
 }

@@ -11,7 +11,6 @@ import java.util.UUID;
 public interface IMerchantRepository extends JpaRepository<Merchant, Long> {
     public Merchant findByBusinessEmail(String businessEmail);
 
-
     @Query("SELECT s FROM Merchant s WHERE s.MERCHANT_PASSWORD=?1")
     public Merchant findByMerchantPassword(UUID MERCHANT_PASSWORD);
 }
