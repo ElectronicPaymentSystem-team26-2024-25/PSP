@@ -5,7 +5,7 @@ import com.psp.psp.model.PaymentStatus;
 import java.time.LocalDateTime;
 
 public class PaymentStatusResponse {
-    private String merchantOrderId;
+    private int merchantOrderId;
     private String paymentId;
     private int acquirerOrderId;
     private LocalDateTime acquirerTimestamp;
@@ -13,11 +13,11 @@ public class PaymentStatusResponse {
     private String failReason;
     public PaymentStatusResponse(){}
 
-    public String getMerchantOrderId() {
+    public int getMerchantOrderId() {
         return merchantOrderId;
     }
 
-    public void setMerchantOrderId(String merchantOrderId) {
+    public void setMerchantOrderId(int merchantOrderId) {
         this.merchantOrderId = merchantOrderId;
     }
 

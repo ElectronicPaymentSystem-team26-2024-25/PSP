@@ -1,9 +1,7 @@
 package com.psp.psp.controller;
 
-import com.psp.psp.dto.PaymentRequest;
-import com.psp.psp.dto.PaymentResponse;
-import com.psp.psp.dto.PaymentStatusResponse;
-import com.psp.psp.dto.SubscriptionDto;
+import com.psp.psp.dto.*;
+import com.psp.psp.model.MerchantOrder;
 import com.psp.psp.service.MerchantService;
 import com.psp.psp.service.PaymentService;
 import jakarta.annotation.security.PermitAll;
@@ -47,9 +45,25 @@ public class PaymentController {
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
     @PostMapping("/order-status")
-    public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse response){
-        //TODO: sacuvati transakciju u bazi
-        response.toString();
+    public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse bankResponse){
+        String url = "http://localhost:8079/api/orders/order-status";
+        OrderStatusDto orderStatusDto = paymentService.saveOrderStatus(bankResponse);
+        ResponseEntity<Object> response = restTemplate.postForEntity(url, orderStatusDto, Object.class);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/create-order")
+    public ResponseEntity<CreateOrderResponse> createOrder(@RequestBody CreateOrderRequest orderRequest){
+        MerchantOrder order = paymentService.saveOrder(orderRequest);
+        if(order == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        CreateOrderResponse response = paymentService.generatePSPPaymentLink(orderRequest.getMerchantPassword(), order.getLinkUUID());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<MerchantOrder> getOrder(@PathVariable String orderId){
+        MerchantOrder order = paymentService.getOrder(orderId);
+        if(order == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }

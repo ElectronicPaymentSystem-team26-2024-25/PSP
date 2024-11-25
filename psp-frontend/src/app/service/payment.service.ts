@@ -5,6 +5,7 @@ import { Subscription } from '../model/subscription.model';
 import { environment } from '../env/environment';
 import { PaymentExecutionRequest } from '../model/payment-execution-request.model';
 import { PaymentExecutionResponse } from '../model/payment-execution-response.model';
+import { MerchantOrder } from '../model/merchant-order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,8 @@ export class PaymentService {
   }
   sendBankPaymentRequest(paymentRequest: PaymentExecutionRequest, bankPort: string): Observable<PaymentExecutionResponse>{
     return this.http.post<PaymentExecutionResponse>(environment.apiHost + "payment/execute-payment", paymentRequest)
+  }
+  getOrder(orderLink: string): Observable<MerchantOrder>{
+    return this.http.get<MerchantOrder>(environment.apiHost + "payment/order/"+orderLink)
   }
 }
