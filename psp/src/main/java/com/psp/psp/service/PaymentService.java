@@ -72,7 +72,7 @@ public class PaymentService {
         Merchant merchant = iMerchantRepository.findByMerchantPassword(UUID.fromString(orderRequest.getMerchantPassword()));
         if(merchant == null)
             return null;
-        MerchantOrder order = new MerchantOrder(orderRequest.getOrderId(), LocalDateTime.now(), orderRequest.getAmount(), orderRequest.getMerchantId(),
+        MerchantOrder order = new MerchantOrder(orderRequest.getMerchantOrderId(), LocalDateTime.now(), orderRequest.getAmount(), orderRequest.getMerchantId(),
                 ".", PaymentStatus.IN_PROGRESS);
         order.setLinkUUID(UUID.randomUUID());
         System.out.println(order);

@@ -46,7 +46,7 @@ public class PaymentController {
     }
     @PostMapping("/order-status")
     public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse bankResponse){
-        String url = "http://localhost:8079/api/orders/order-status";
+        String url = "http://localhost:8075/api/orders/order-status";
         OrderStatusDto orderStatusDto = paymentService.saveOrderStatus(bankResponse);
         ResponseEntity<Object> response = restTemplate.postForEntity(url, orderStatusDto, Object.class);
         return new ResponseEntity<>(HttpStatus.OK);
