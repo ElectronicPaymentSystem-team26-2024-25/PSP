@@ -4,7 +4,7 @@ public class CreateOrderRequest {
     private String merchantId;
     private String merchantPassword;
     private int amount;
-    private int orderId;
+    private int merchantOrderId;
     public CreateOrderRequest(){}
 
     public String getMerchantId() {
@@ -31,11 +31,11 @@ public class CreateOrderRequest {
         this.amount = amount;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getMerchantOrderId() {
+        return merchantOrderId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setMerchantOrderId(int orderId) {
+        this.merchantOrderId = orderId;
     }
 }
