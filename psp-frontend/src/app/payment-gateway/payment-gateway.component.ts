@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PaymentExecutionRequest } from '../model/payment-execution-request.model';
 import { PaymentExecutionResponse } from '../model/payment-execution-response.model';
 import { MerchantOrder } from '../model/merchant-order.model';
+import { MerchantInfo } from '../model/merchant-info.model';
 
 @Component({
   selector: 'app-payment-gateway',
@@ -15,6 +16,7 @@ export class PaymentGatewayComponent implements OnInit{
   
   orderLink: string = ''
   merchantOrder?: MerchantOrder
+  merchantInfo?: MerchantInfo
   selectedPaymentMethod: PaymentMethodInfo = {
     name: '',
     type: ''
@@ -41,6 +43,12 @@ export class PaymentGatewayComponent implements OnInit{
         next: (response: MerchantOrder) => {
           this.merchantOrder = response;
           console.log(this.merchantOrder)
+          this.paymentService.getMerchantInfo(response.merchantId).subscribe({
+            next: (resp: MerchantInfo) => {
+              this.merchantInfo = resp;
+              console.log(resp)
+            }
+          })
         }
       })
     })
@@ -71,8 +79,7 @@ export class PaymentGatewayComponent implements OnInit{
     let paymentRequest: PaymentExecutionRequest = {merchantId: '', merchantPassword: '', amount: 0, errorUrl: '', failedUrl: '', merchantOrderId: 0, merchantTimestamp: new Date, successUrl: '', path: ''}
     paymentRequest.merchantId = this.merchantOrder?.merchantId!
     paymentRequest.amount = this.merchantOrder?.amount!
-    //ovo treba da se dobije iz baze psp-a na osnovu merchant Id
-    paymentRequest.merchantPassword = '789e1234-e89b-56d3-a456-426614174111'
+    paymentRequest.merchantPassword = this.merchantInfo?.merchantPassword!
     paymentRequest.merchantOrderId = this.merchantOrder?.merchantOrderId!
     paymentRequest.merchantTimestamp = this.merchantOrder?.merchantTimestamp!
     paymentRequest.errorUrl = 'http://localhost:4200/error/'+paymentRequest.merchantOrderId
@@ -84,7 +91,7 @@ export class PaymentGatewayComponent implements OnInit{
   }
   executePaymentInBank(paymentRequest: PaymentExecutionRequest){
     //dobiti port banke na osnovu merchant Id iz baze
-    let bankPort: string = '8060'
+    let bankPort: string = this.merchantInfo?.port!
     paymentRequest.path = "api/cardpayment/cardpaymentform/"+bankPort
     this.paymentService.sendBankPaymentRequest(paymentRequest, bankPort).subscribe({
       next: (response: PaymentExecutionResponse) => {
