@@ -22,6 +22,9 @@ public class MerchantOrder {
     @Column(nullable = false, unique = true, name = "LINK_UUID")
     private UUID linkUUID;
 
+    @Column(nullable = true, name = "FAIL_REASON")
+    private String failReason;
+
     public MerchantOrder(){}
 
     public MerchantOrder(int orderId, LocalDateTime merchantTimestamp, int amount, String merchantId, String paymentId, PaymentStatus orderStatus) {
@@ -87,5 +90,13 @@ public class MerchantOrder {
 
     public void setLinkUUID(UUID linkUUID) {
         this.linkUUID = linkUUID;
+    }
+
+    public String getFailReason() {
+        return failReason;
+    }
+
+    public void setFailReason(String failReason) {
+        this.failReason = failReason;
     }
 }

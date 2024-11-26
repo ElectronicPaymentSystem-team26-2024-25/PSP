@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psp.psp.dto.*;
 import com.psp.psp.model.*;
+import com.psp.psp.repository.interfaces.IMerchantBankRepository;
 import com.psp.psp.repository.interfaces.IMerchantOrderRepository;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
@@ -15,11 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.empty;
 
 @Service
 public class PaymentService {
@@ -30,7 +27,8 @@ public class PaymentService {
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
     @Autowired
     IMerchantOrderRepository iMerchantOrderRepository;
-
+    @Autowired
+    IMerchantBankRepository iMerchantBankRepository;
     public PaymentService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
         this.iMerchantRepository = iMerchantRepository;
         this.iPaymentSubscriptionRepository = iPaymentSubscriptionRepository;
@@ -75,6 +73,7 @@ public class PaymentService {
         MerchantOrder order = new MerchantOrder(orderRequest.getMerchantOrderId(), LocalDateTime.now(), orderRequest.getAmount(), orderRequest.getMerchantId(),
                 ".", PaymentStatus.IN_PROGRESS);
         order.setLinkUUID(UUID.randomUUID());
+        order.setFailReason(".");
         System.out.println(order);
         return iMerchantOrderRepository.save(order);
     }
@@ -89,10 +88,25 @@ public class PaymentService {
     public OrderStatusDto saveOrderStatus(PaymentStatusResponse bankResponse){
         MerchantOrder order = iMerchantOrderRepository.getReferenceById(bankResponse.getMerchantOrderId());
         order.setOrderStatus(bankResponse.getStatus());
+        order.setPaymentId(bankResponse.getPaymentId());
+        order.setFailReason(bankResponse.getFailReason());
         iMerchantOrderRepository.save(order);
         OrderStatusDto orderDTO = new OrderStatusDto();
         orderDTO.setOrderId(bankResponse.getMerchantOrderId());
         orderDTO.setOrderStatus(bankResponse.getStatus().toString());
         return orderDTO;
+    }
+    public MerchantInfoDto getMerchantInfo(String merchantId){
+        MerchantInfoDto dto = new MerchantInfoDto();
+        MerchantBank merchantBank = iMerchantBankRepository.findByMerchantId(UUID.fromString(merchantId));
+        dto.setPort(merchantBank.getPort());
+        dto.setMerchantPassword(merchantBank.getMerchantPassword().toString());
+        return dto;
+    }
+    public FailReasonDto getFailReason(int orderId){
+        MerchantOrder order = iMerchantOrderRepository.getReferenceById(orderId);
+        FailReasonDto reason = new FailReasonDto();
+        reason.setFailReason(order.getFailReason());
+        return reason;
     }
 }

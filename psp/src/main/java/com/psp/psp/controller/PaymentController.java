@@ -66,4 +66,14 @@ public class PaymentController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+    @GetMapping("/merchant/{merchantId}")
+    public ResponseEntity<MerchantInfoDto> getMerchantInfo(@PathVariable String merchantId){
+        MerchantInfoDto info = paymentService.getMerchantInfo(merchantId);
+        return new ResponseEntity<>(info, HttpStatus.OK);
+    }
+    @GetMapping("/fail/{orderId}")
+    public ResponseEntity<FailReasonDto> getFailReason(@PathVariable String orderId){
+        FailReasonDto dto = paymentService.getFailReason(Integer.parseInt(orderId));
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }

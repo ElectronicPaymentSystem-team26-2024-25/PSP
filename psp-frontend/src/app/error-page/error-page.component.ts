@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PaymentService } from '../service/payment.service';
+import { FailReason } from '../model/fail-reason.model';
 
 @Component({
   selector: 'app-error-page',
@@ -9,10 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 export class ErrorPageComponent {
   id: string | null = null;
   reason: string | null = null;
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private service: PaymentService) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('orderId');
-    //fail reason dobavim iz baze
+    this.service.getFailReason(this.id!).subscribe({
+      next: (response: FailReason) => {
+        this.reason = response.failReason
+      }
+    })
   }
 }
