@@ -1,20 +1,20 @@
 package com.psp.psp.service;
 
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import com.psp.psp.converter.MerchantConverter;
 import com.psp.psp.converter.PaymentMethodConverter;
+import com.psp.psp.converter.SubscriptionConverter;
 import com.psp.psp.dto.MerchantDto;
-import com.psp.psp.dto.PaymentMethodInfoDto;
+import com.psp.psp.dto.PaymentMethodDto;
 import com.psp.psp.dto.SubscriptionDto;
+import com.psp.psp.dto.SubscriptionsDto;
 import com.psp.psp.model.Merchant;
 import com.psp.psp.model.PaymentMethod;
-import com.psp.psp.model.PaymentSubscription;
+import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -34,67 +34,61 @@ public class MerchantService {
         this.iPaymentSubscriptionRepository = iPaymentSubscriptionRepository;
     }
 
+    public SubscriptionDto changeStatus(SubscriptionDto subscriptionDto){
+        Subscription subscription = iPaymentSubscriptionRepository
+                .find(subscriptionDto.getMerchantId(), subscriptionDto.getPaymentMethodId());
+        if(subscription == null) throw new IllegalArgumentException("Subscription not found.");
+        subscription.setActive(!subscription.isActive());
+        iPaymentSubscriptionRepository.save(subscription);
+        return SubscriptionConverter.toDto(subscription, subscriptionDto.getPaymentMethodName());
+    }
+
     public MerchantDto getMerchant(String businessEmail){
         Merchant merchant = iMerchantRepository.findByBusinessEmail(businessEmail);
         if(merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
         return MerchantConverter.convertToDto(merchant);
     }
 
-    public List<PaymentMethodInfoDto> getSubscribedPayments(String businessEmail) {
+    public List<SubscriptionDto> getSubscribedPaymentMethods(String businessEmail) {
         Merchant merchant = iMerchantRepository.findByBusinessEmail(businessEmail);
         if (merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
-
-        List<PaymentMethodInfoDto> dtos = getSubscribedPaymentMethods(merchant);
-        return dtos;
+        List<Subscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
+        if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
+        return SubscriptionConverter.toDto(subscriptions, getPaymentMethods(merchant, true));
     }
 
-    public SubscriptionDto getPaymentMethodsByMerchant(String merchantPassword) {
+    public List<PaymentMethodDto> getNotSubscribedPaymentMethods(String businessEmail) {
+        Merchant merchant = iMerchantRepository.findByBusinessEmail(businessEmail);
+        if (merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
+        return getPaymentMethodsDto(merchant, false);
+    }
+
+    public SubscriptionsDto getMerchantsPaymentMethods(String merchantPassword) {
         Merchant merchant = iMerchantRepository.findByMerchantPassword(UUID.fromString(merchantPassword));
         if (merchant == null) throw new IllegalArgumentException("Merchant with the provided MERCHANT_PASSWORD does not exist.");
-
-        List<PaymentMethodInfoDto> dtos = getSubscribedPaymentMethods(merchant);
-        SubscriptionDto subscriptionDto = new SubscriptionDto();
-        subscriptionDto.setMerchantEmail(merchant.getBusinessEmail());
-        subscriptionDto.setPaymentMethods(dtos);
-        return subscriptionDto;
+        SubscriptionsDto subscriptionsDto = new SubscriptionsDto();
+        subscriptionsDto.setMerchantEmail(merchant.getBusinessEmail());
+        subscriptionsDto.setPaymentMethods(getPaymentMethodsDto(merchant, true));
+        return subscriptionsDto;
     }
 
-    public List<PaymentMethodInfoDto> getNotSubscribedPayments(String businessEmail) {
-        Merchant merchant = iMerchantRepository.findByBusinessEmail(businessEmail);
-        if (merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
+    private List<PaymentMethodDto> getPaymentMethodsDto(Merchant merchant, boolean isSubscribed){
+        return getPaymentMethods(merchant, isSubscribed).stream()
+                .map(PaymentMethodConverter::convertToDto)
+                .collect(Collectors.toList());
+    }
 
-        List<PaymentSubscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
+    private List<PaymentMethod> getPaymentMethods(Merchant merchant, boolean isSubscribed) {
+        List<Subscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
         if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
-
         List<PaymentMethod> paymentMethods = paymentService.readPaymentMethods();
         if (paymentMethods == null || paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
 
-        List<PaymentMethodInfoDto> dtos = new ArrayList<>();
         Set<Long> subscribedMethodIds = subscriptions.stream()
-                .map(PaymentSubscription::getPaymentMethodId)
+                .map(Subscription::getPaymentMethodId)
                 .collect(Collectors.toSet());
-        paymentMethods.removeIf(paymentMethod -> subscribedMethodIds.contains(paymentMethod.getId()));
-        paymentMethods.forEach(method -> dtos.add(PaymentMethodConverter.convertToDto(method)));
-        return dtos;
-    }
-
-    private List<PaymentMethodInfoDto> getSubscribedPaymentMethods(Merchant merchant) {
-        List<PaymentSubscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
-        if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
-
-        List<PaymentMethod> paymentMethods = paymentService.readPaymentMethods();
-        if (paymentMethods == null || paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
-
-        List<PaymentMethodInfoDto> dtos = new ArrayList<>();
-        for (PaymentSubscription subscription : subscriptions) {
-            PaymentMethod method = paymentMethods.stream()
-                    .filter(paymentMethod -> paymentMethod.getId().equals(subscription.getPaymentMethodId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Payment method not found for subscription ID: " + subscription.getPaymentMethodId())
-                    );
-            dtos.add(PaymentMethodConverter.convertToDto(method));
-        }
-        return dtos;
+        return paymentMethods.stream()
+                .filter(paymentMethod -> isSubscribed == subscribedMethodIds.contains(paymentMethod.getId()))
+                .collect(Collectors.toList());
     }
 }

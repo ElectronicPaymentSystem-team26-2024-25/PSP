@@ -2,7 +2,7 @@ package com.psp.psp.dto;
 
 import com.psp.psp.enumerations.PaymentType;
 
-public class PaymentMethodInfoDto {
+public class PaymentMethodDto {
     private String name;
     private PaymentType type;
 

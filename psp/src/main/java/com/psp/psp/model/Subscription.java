@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "payment_subscriptions")
-public class PaymentSubscription {
+public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,18 +16,15 @@ public class PaymentSubscription {
     @Column(nullable = false, name = "payment_method_id")
     private Long paymentMethodId;
 
-    public PaymentSubscription() {
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    public Subscription() {
     }
 
-    public PaymentSubscription(Long merchantId, Long paymentMethodId) {
+    public Subscription(Long merchantId, Long paymentMethodId) {
         this.merchantId = merchantId;
         this.paymentMethodId = paymentMethodId;
-    }
-
-    public PaymentSubscription(Long id, Long merchantId, Long paymentTypeId) {
-        this.id = id;
-        this.merchantId = merchantId;
-        this.paymentMethodId = paymentTypeId;
     }
 
     public Long getPaymentMethodId() {
@@ -54,4 +51,11 @@ public class PaymentSubscription {
         this.merchantId = merchantId;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

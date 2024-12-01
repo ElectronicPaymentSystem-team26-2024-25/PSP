@@ -3,7 +3,7 @@ package com.psp.psp.dto;
 
 import java.util.List;
 
-public class SubscriptionDto {
+public class SubscriptionsDto {
 
     public String getMerchantEmail() {
         return merchantEmail;
@@ -13,14 +13,14 @@ public class SubscriptionDto {
         this.merchantEmail = merchantEmail;
     }
 
-    public List<PaymentMethodInfoDto> getPaymentMethods() {
+    public List<PaymentMethodDto> getPaymentMethods() {
         return paymentMethods;
     }
 
-    public void setPaymentMethods(List<PaymentMethodInfoDto> paymentMethods) {
+    public void setPaymentMethods(List<PaymentMethodDto> paymentMethods) {
         this.paymentMethods = paymentMethods;
     }
 
     private String merchantEmail;
-    private List<PaymentMethodInfoDto> paymentMethods;
+    private List<PaymentMethodDto> paymentMethods;
 }

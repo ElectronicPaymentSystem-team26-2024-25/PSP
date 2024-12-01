@@ -48,23 +48,23 @@ public class PaymentService {
         return methods;
     }
 
-    public SubscriptionDto subscribe(SubscriptionDto subscriptionDto){
-        if(subscriptionDto.getPaymentMethods().size() < 1) throw new IllegalStateException("Must be at least one payment method to subscribe to.");
-        Merchant merchant = iMerchantRepository.findByBusinessEmail(subscriptionDto.getMerchantEmail());
+    public SubscriptionsDto subscribe(SubscriptionsDto subscriptionsDto){
+        if(subscriptionsDto.getPaymentMethods().size() < 1) throw new IllegalStateException("Must be at least one payment method to subscribe to.");
+        Merchant merchant = iMerchantRepository.findByBusinessEmail(subscriptionsDto.getMerchantEmail());
         if(merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
 
         List<PaymentMethod> paymentMethods = readPaymentMethods();
-        subscriptionDto.getPaymentMethods().forEach(subscription ->{
+        subscriptionsDto.getPaymentMethods().forEach(subscription ->{
             PaymentMethod method = paymentMethods.stream()
                     .filter(paymentMethod -> paymentMethod.getName().equals(subscription.getName()) && paymentMethod.getType().equals(subscription.getType()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Payment method not found for subscription NAME: " + subscription.getName())
                     );
-            PaymentSubscription paymentSubscription = new PaymentSubscription(merchant.getId(), method.getId());
+            Subscription paymentSubscription = new Subscription(merchant.getId(), method.getId());
             iPaymentSubscriptionRepository.save(paymentSubscription);
         });
-        return subscriptionDto;
+        return subscriptionsDto;
     }
     public MerchantOrder saveOrder(CreateOrderRequest orderRequest){
         Merchant merchant = iMerchantRepository.findByMerchantPassword(UUID.fromString(orderRequest.getMerchantPassword()));

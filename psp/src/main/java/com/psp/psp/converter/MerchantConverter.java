@@ -9,6 +9,7 @@ public class MerchantConverter{
 
     public static MerchantDto convertToDto(Merchant merchant){
         MerchantDto dto = new MerchantDto();
+        dto.setId(merchant.getId());
         dto.setMerchantId(String.valueOf(merchant.getMerchantId()));
         dto.setMerchantPassword(String.valueOf(merchant.getMerchantPassword()));
         dto.setBusinessEmail(merchant.getBusinessEmail());

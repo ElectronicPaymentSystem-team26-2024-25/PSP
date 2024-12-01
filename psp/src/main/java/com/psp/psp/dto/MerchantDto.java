@@ -1,14 +1,21 @@
 package com.psp.psp.dto;
 
-import jakarta.persistence.Column;
-
 public class MerchantDto {
+    private Long id;
     private String merchantId;
     private String merchantPassword;
     private String businessName;
     private String businessEmail;
     private String legalName;
     private String legalLastname;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getMerchantId() {
         return merchantId;
