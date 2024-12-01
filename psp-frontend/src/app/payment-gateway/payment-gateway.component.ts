@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentMethodInfo, Subscription } from '../model/subscription.model';
+import { PaymentMethodInfo, Subscriptions } from '../model/subscription.model';
 import { PaymentService } from '../service/payment.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaymentExecutionRequest } from '../model/payment-execution-request.model';
@@ -22,7 +22,7 @@ export class PaymentGatewayComponent implements OnInit{
     type: ''
   };
 
-  subscription: Subscription = {
+  subscription: Subscriptions = {
     merchantEmail: '',
     paymentMethods: []
   };
@@ -35,7 +35,7 @@ export class PaymentGatewayComponent implements OnInit{
       const token = params['merchant']
       this.orderLink = params['order']
       this.paymentService.getMerchantsSubscribed(token).subscribe({
-        next: (response: Subscription) => {
+        next: (response: Subscriptions) => {
           this.subscription = response;
         }
       })

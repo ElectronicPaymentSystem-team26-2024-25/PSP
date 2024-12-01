@@ -3,7 +3,7 @@ import { MerchantService } from '../service/merchant.service';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Merchant } from '../model/merchant.model';
 import { User } from '../model/user.model';
-import { PaymentMethodInfo, Subscription } from '../model/subscription.model';
+import { PaymentMethodInfo, Subscription, Subscriptions } from '../model/subscription.model';
 import { PaymentService } from '../service/payment.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class MerchantPageComponent implements OnInit{
     legalLastname: ''
   }
 
-  subscriptions: PaymentMethodInfo[] = [];
+  subscriptions: Subscription[] = [];
   notSubscriptions: PaymentMethodInfo[] = []
   featureSubscriptions: PaymentMethodInfo[] = [];
 
@@ -51,12 +51,7 @@ export class MerchantPageComponent implements OnInit{
   }
 
   getSubscribedPayments(email: string): void {
-    this.service.getSubscribedPayments(email).subscribe({
-      next: (response: PaymentMethodInfo[]) => {
-        if(response == null || response == undefined) return;
-        this.subscriptions = response;
-      }
-    })
+    this.getSubscriptions(email);
   }
 
   addToSubscribe(subscription: PaymentMethodInfo): void {
@@ -69,20 +64,17 @@ export class MerchantPageComponent implements OnInit{
       this.featureSubscriptions.splice(index, 1)
   }
 
-  subscribe(): void{
+  subscribe(): void {
       if(this.featureSubscriptions.length < 1) return;
 
-      const subscription: Subscription = {
+      const subscription: Subscriptions = {
         merchantEmail: this.merchant.businessEmail,
         paymentMethods: this.featureSubscriptions
       }
       this.paymentService.subscribe(subscription).subscribe({
-        next: (response: Subscription) => {
-          console.log("This is response: " + response);
-          if(response == null || response == undefined) return;
-          this.hideModal();
-          response.paymentMethods.forEach(pm => this.subscriptions.push(pm));
-        }
+          next: (response: any) => {
+            this.getSubscriptions(this.merchant.businessEmail)
+          }
       });
   }
 
@@ -113,5 +105,14 @@ export class MerchantPageComponent implements OnInit{
       return;
     }
     this.addToSubscribe(subscription);
+  }
+
+  private getSubscriptions(email: string) {
+    this.service.getSubscribedPayments(email).subscribe({
+      next: (response: Subscription[]) => {
+        if (response == null || response == undefined) return;
+        this.subscriptions = response;
+      }
+    });
   }
 }

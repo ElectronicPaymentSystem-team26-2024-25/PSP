@@ -41,7 +41,7 @@ public class MerchantController {
     }
 
     @PatchMapping("/payment/change-status")
-    public ResponseEntity<SubscriptionDto> changeStatus(SubscriptionDto subscription, HttpServletResponse response){
+    public ResponseEntity<SubscriptionDto> changeStatus(@RequestBody SubscriptionDto subscription, HttpServletResponse response){
         return ResponseEntity.ok(merchantService.changeStatus(subscription));
     }
 }
