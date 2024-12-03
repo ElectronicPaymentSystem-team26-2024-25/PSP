@@ -18,7 +18,6 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-
     @Autowired
     private MerchantService merchantService;
     @Autowired
@@ -29,6 +28,13 @@ public class PaymentController {
     public ResponseEntity<SubscriptionsDto> subscribe(
             @RequestBody SubscriptionsDto subscriptionsDto, HttpServletResponse response) {
         return ResponseEntity.ok(paymentService.subscribe(subscriptionsDto));
+    }
+
+    @DeleteMapping("/unsubscribe/{merchantId}/{paymentMethodId}")
+    public ResponseEntity<Void> unsubscribe(
+            @PathVariable("merchantId") Long merchantId, @PathVariable("paymentMethodId") Long paymentMethodId,HttpServletResponse response) {
+        if(paymentService.unsubscribe(merchantId, paymentMethodId)) return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/merchant/subscribed")

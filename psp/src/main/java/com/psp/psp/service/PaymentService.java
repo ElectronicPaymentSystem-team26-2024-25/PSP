@@ -48,6 +48,13 @@ public class PaymentService {
         return methods;
     }
 
+    public boolean unsubscribe(Long merchantId, Long paymentMethodId){
+        Subscription subscription = iPaymentSubscriptionRepository.find(merchantId, paymentMethodId);
+        if(subscription == null) return false;
+        iPaymentSubscriptionRepository.delete(subscription);
+        return true;
+    }
+
     public SubscriptionsDto subscribe(SubscriptionsDto subscriptionsDto){
         if(subscriptionsDto.getPaymentMethods().size() < 1) throw new IllegalStateException("Must be at least one payment method to subscribe to.");
         Merchant merchant = iMerchantRepository.findByBusinessEmail(subscriptionsDto.getMerchantEmail());

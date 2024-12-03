@@ -45,13 +45,9 @@ export class MerchantPageComponent implements OnInit{
       next: (response: Merchant) => {
         if(response == null) return;
         this.merchant = response;
-        this.getSubscribedPayments(this.merchant.businessEmail);
+        this.getSubscriptions(this.merchant.businessEmail);
       }
     })
-  }
-
-  getSubscribedPayments(email: string): void {
-    this.getSubscriptions(email);
   }
 
   addToSubscribe(subscription: PaymentMethodInfo): void {
@@ -76,6 +72,29 @@ export class MerchantPageComponent implements OnInit{
             this.getSubscriptions(this.merchant.businessEmail)
           }
       });
+  }
+
+  unsubscribe(sub: Subscription): void {
+    this.paymentService.unsubscribe(sub).subscribe({
+      next: () => {
+        this.getSubscriptions(this.merchant.businessEmail);
+      }
+    })
+  }
+
+  changeStatus(sub: Subscription): void {
+      this.service.changeStatus(sub).subscribe({
+        next: (response: Subscription) => {
+            if(response == null || response == undefined) return;
+            const index = this.subscriptions.findIndex(subscription => 
+              subscription.merchantId === sub.merchantId && subscription.paymentMethodId == sub.paymentMethodId)
+            if(index === -1) return;
+            this.subscriptions[index] = response;  
+        },
+        error: (err: any) => {
+            console.log(err);
+        }
+      })
   }
 
   showModal(): void{

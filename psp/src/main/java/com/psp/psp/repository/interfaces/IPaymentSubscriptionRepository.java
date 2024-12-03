@@ -12,6 +12,7 @@ public interface IPaymentSubscriptionRepository extends JpaRepository<Subscripti
 
     @Query("SELECT s FROM Subscription s WHERE s.merchantId=?1 AND s.paymentMethodId=?2")
     public Subscription find(Long merchantId, Long paymentMethodId);
+    public void delete(Subscription subscription);
     public List<Subscription> findByMerchantId(Long merchantId);
     public Subscription save(Subscription paymentSubscription);
 }

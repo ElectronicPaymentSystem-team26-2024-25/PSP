@@ -49,8 +49,8 @@
               <td>{{sub.active ? 'Active' : 'Inactive'}}</td>
               <td>
                 <span><a><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
-                <span><a><img src="../../assets/icons/icons8-delete-50.png" class="icon-size"></a></span>
-                <span><a><img src="../../assets/icons/icons8-activate-50.png" class="icon-size"></a></span>
+                <span><a (click)="unsubscribe(sub)" ><img src="../../assets/icons/icons8-delete-50.png" class="icon-size"></a></span>
+                <span><a (click)="changeStatus(sub)"><img src="../../assets/icons/icons8-activate-50.png" class="icon-size"></a></span>
               </td>
             </tr>
           </tbody>

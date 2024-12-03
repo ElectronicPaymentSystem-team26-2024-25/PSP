@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Subscriptions } from '../model/subscription.model';
+import { Subscription, Subscriptions } from '../model/subscription.model';
 import { environment } from '../env/environment';
 import { PaymentExecutionRequest } from '../model/payment-execution-request.model';
 import { PaymentExecutionResponse } from '../model/payment-execution-response.model';
@@ -18,6 +18,10 @@ export class PaymentService {
 
   subscribe(subscription: Subscriptions): Observable<Subscriptions> {
     return this.http.post<Subscriptions>(environment.apiHost + 'payment/subscribe', subscription);
+  }
+
+  unsubscribe(subscription: Subscription): Observable<void> {
+    return this.http.delete<void>(environment.apiHost + 'payment/unsubscribe/' + subscription.merchantId + "/" + subscription.paymentMethodId);
   }
 
   getMerchantsSubscribed(merchantPassword: string): Observable<Subscriptions>{
