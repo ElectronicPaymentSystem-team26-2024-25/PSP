@@ -1,6 +1,6 @@
 package com.psp.psp.converter;
 
-import com.psp.psp.dto.MerchantDto;
+import com.psp.psp.dto.merchant.MerchantDto;
 import com.psp.psp.model.Merchant;
 import org.springframework.stereotype.Component;
 

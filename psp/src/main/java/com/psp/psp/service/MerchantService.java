@@ -1,12 +1,13 @@
 package com.psp.psp.service;
 
+import com.psp.psp.config.payments.service.PaymentConfigurationService;
 import com.psp.psp.converter.MerchantConverter;
 import com.psp.psp.converter.PaymentMethodConverter;
 import com.psp.psp.converter.SubscriptionConverter;
-import com.psp.psp.dto.MerchantDto;
-import com.psp.psp.dto.PaymentMethodDto;
-import com.psp.psp.dto.SubscriptionDto;
-import com.psp.psp.dto.SubscriptionsDto;
+import com.psp.psp.dto.merchant.MerchantDto;
+import com.psp.psp.dto.payments.PaymentMethodDto;
+import com.psp.psp.dto.subscriptions.SubscriptionDto;
+import com.psp.psp.dto.subscriptions.SubscriptionsDto;
 import com.psp.psp.model.Merchant;
 import com.psp.psp.model.PaymentMethod;
 import com.psp.psp.model.Subscription;
@@ -81,7 +82,7 @@ public class MerchantService {
     private List<PaymentMethod> getPaymentMethods(Merchant merchant, boolean isSubscribed) {
         List<Subscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
         if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
-        List<PaymentMethod> paymentMethods = paymentService.readPaymentMethods();
+        List<PaymentMethod> paymentMethods = PaymentConfigurationService.readPaymentMethods();
         if (paymentMethods == null || paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
 
         Set<Long> subscribedMethodIds = subscriptions.stream()

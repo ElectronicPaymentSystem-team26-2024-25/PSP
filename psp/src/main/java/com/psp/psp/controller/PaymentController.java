@@ -1,6 +1,15 @@
 package com.psp.psp.controller;
 
-import com.psp.psp.dto.*;
+import com.psp.psp.dto.merchant.MerchantInfoDto;
+import com.psp.psp.dto.merchant.PayPalClientDto;
+import com.psp.psp.dto.orders.CreateOrderRequest;
+import com.psp.psp.dto.orders.CreateOrderResponse;
+import com.psp.psp.dto.orders.FailReasonDto;
+import com.psp.psp.dto.orders.OrderStatusDto;
+import com.psp.psp.dto.payments.PaymentRequest;
+import com.psp.psp.dto.payments.PaymentResponse;
+import com.psp.psp.dto.payments.PaymentStatusResponse;
+import com.psp.psp.dto.subscriptions.SubscriptionsDto;
 import com.psp.psp.model.MerchantOrder;
 import com.psp.psp.service.MerchantService;
 import com.psp.psp.service.PaymentService;
@@ -23,6 +32,14 @@ public class PaymentController {
     @Autowired
     private RestTemplate restTemplate;
 
+
+    @PostMapping(path = "/client/{paymentMethodId}")
+    public ResponseEntity<Object> createClient(@PathVariable("paymentMethodId") Long paymentMethodId, @RequestBody PayPalClientDto payPalClient){
+        String endpointUrl = paymentService.getPaymentServiceLink(paymentMethodId, "createClient");
+        String serviceAddress = paymentService.getPaymentServiceAddress(paymentMethodId);
+        ResponseEntity<Object> serviceResponse = restTemplate.postForEntity(serviceAddress + endpointUrl, payPalClient, Object.class);
+        return new ResponseEntity<>(serviceResponse.getBody(), serviceResponse.getStatusCode());
+    }
 
     @PostMapping("/subscribe")
     public ResponseEntity<SubscriptionsDto> subscribe(

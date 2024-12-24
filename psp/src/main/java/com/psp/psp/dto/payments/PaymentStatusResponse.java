@@ -1,6 +1,6 @@
-package com.psp.psp.dto;
+package com.psp.psp.dto.payments;
 
-import com.psp.psp.model.PaymentStatus;
+import com.psp.psp.enumerations.PaymentStatus;
 
 import java.time.LocalDateTime;
 

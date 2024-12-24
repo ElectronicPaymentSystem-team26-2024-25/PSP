@@ -2,28 +2,34 @@
   {
     "id": 1,
     "name": "PayPal",
-    "apiEndpointUrl": "https://api.paypal.com",
+    "version": "1.0",
     "type": "wallet",
+    "endpoints": {
+      "api" : "/api/paypal",
+      "createClient": "/client",
+      "initiatePayment": "/payment",
+      "capturePayment": "/payment/orderId"
+    },
     "isActive": true
   },
   {
     "id": 2,
     "name": "BitcoinProcessor",
-    "apiEndpointUrl": "https://api.crypto.com",
+    "version": "1.0",
     "type": "crypto",
     "isActive": false
   },
   {
     "id": 3,
     "name": "BitcoinProcessor2.0",
-    "apiEndpointUrl": "https://api.crypto.com",
+    "version": "1.0",
     "type": "crypto",
     "isActive": false
   },
   {
     "id": 4,
     "name": "Bank",
-    "apiEndpointUrl": "https://api.crypto.com",
+    "version": "1.0",
     "type": "bank",
     "isActive": true
   }
