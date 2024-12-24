@@ -1,4 +1,4 @@
-package com.psp.psp.dto;
+package com.psp.psp.dto.orders;
 
 public class CreateOrderResponse {
     private String url;

@@ -1,13 +1,12 @@
 package com.psp.psp.converter;
 
-import com.psp.psp.dto.SubscriptionDto;
+import com.psp.psp.dto.subscriptions.SubscriptionDto;
 import com.psp.psp.model.PaymentMethod;
 import com.psp.psp.model.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class SubscriptionConverter {
 

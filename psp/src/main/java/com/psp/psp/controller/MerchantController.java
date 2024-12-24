@@ -1,8 +1,8 @@
 package com.psp.psp.controller;
 
-import com.psp.psp.dto.MerchantDto;
-import com.psp.psp.dto.PaymentMethodDto;
-import com.psp.psp.dto.SubscriptionDto;
+import com.psp.psp.dto.merchant.MerchantDto;
+import com.psp.psp.dto.payments.PaymentMethodDto;
+import com.psp.psp.dto.subscriptions.SubscriptionDto;
 import com.psp.psp.service.MerchantService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

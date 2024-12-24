@@ -1,4 +1,4 @@
-package com.psp.psp.model;
+package com.psp.psp.enumerations;
 
 public enum PaymentStatus {
     FAIL,

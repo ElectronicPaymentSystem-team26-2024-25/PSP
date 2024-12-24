@@ -1,4 +1,4 @@
-package com.psp.psp.dto;
+package com.psp.psp.dto.merchant;
 
 public class MerchantInfoDto {
     private String merchantPassword;

@@ -12,6 +12,8 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { SuccessPageComponent } from './success-page/success-page.component';
 import { FailedPageComponent } from './failed-page/failed-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { PaypalClientComponent } from './payments/paypal-client/paypal-client.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,9 +23,11 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     NavbarComponent,
     SuccessPageComponent,
     FailedPageComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    PaypalClientComponent
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

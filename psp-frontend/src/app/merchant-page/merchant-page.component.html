@@ -48,7 +48,7 @@
               <td>{{sub.paymentMethodName}}</td>
               <td>{{sub.active ? 'Active' : 'Inactive'}}</td>
               <td>
-                <span><a><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
+                <span><a (click)="showEditModal(sub)" ><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
                 <span><a (click)="unsubscribe(sub)" ><img src="../../assets/icons/icons8-delete-50.png" class="icon-size"></a></span>
                 <span><a (click)="changeStatus(sub)"><img src="../../assets/icons/icons8-activate-50.png" class="icon-size"></a></span>
               </td>
@@ -56,17 +56,17 @@
           </tbody>
         </table>
         <div class="form-group mb-3 text-left">
-            <button class="btn btn-primary btn-block" (click)="showModal();">Add new payment method</button>
+            <button class="btn btn-primary btn-block" (click)="showAssignModal();">Add new payment method</button>
         </div>
       </div>
     </div>
 
     <!-- Modal for assigning new subscriptions -->
-    <div class="overlay" *ngIf="showAssignModal">
+    <div class="overlay" *ngIf="showAssign">
       <div class="centered-content">
         <h3 class="d-flex justify-content-between align-items-center font-weight-bold title mb-5">
           <span>Choose payment methods</span>
-          <span><a (click)="hideModal()"><img src="../../assets/icons/icons8-close-50.png" class="icon-size"></a></span>
+          <span><a (click)="hideAssignModal()"><img src="../../assets/icons/icons8-close-50.png" class="icon-size"></a></span>
         </h3>
         <table class="table table-hover">
           <thead>
@@ -88,4 +88,18 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal for editing subscription info -->
+     <div class="overlay" *ngIf="showEdit">
+      <div class="centered-content" id="editModalDiv">
+        <div>
+          <h3 class="d-flex justify-content-between align-items-center font-weight-bold title mb-5">
+            <span>Edit subscription</span>
+            <span><a (click)="hideEditModal()"><img src="../../assets/icons/icons8-close-50.png" class="icon-size"></a></span>
+          </h3>
+        </div>
+        <app-paypal-client *ngIf="selectedSubscription.paymentMethodName === 'PayPal'" 
+        [merchantId]="merchant.merchantId" [methodId]="selectedSubscription.paymentMethodId" (successfullEvent)="hideEditModal()"></app-paypal-client>
+      </div>
+     </div>
 </div>

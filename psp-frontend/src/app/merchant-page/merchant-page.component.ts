@@ -28,11 +28,19 @@ export class MerchantPageComponent implements OnInit{
     legalLastname: ''
   }
 
+  selectedSubscription: Subscription = {
+    paymentMethodName: '',
+    merchantId: -1,
+    paymentMethodId: -1,
+    active: true
+  }
+
   subscriptions: Subscription[] = [];
   notSubscriptions: PaymentMethodInfo[] = []
   featureSubscriptions: PaymentMethodInfo[] = [];
 
-  showAssignModal: boolean = false;
+  showAssign: boolean = false;
+  showEdit: boolean = false;
 
   constructor(private service: MerchantService, private auth: AuthServiceService, private paymentService: PaymentService){}
   
@@ -97,20 +105,33 @@ export class MerchantPageComponent implements OnInit{
       })
   }
 
-  showModal(): void{
+  showAssignModal(): void{
     this.service.getNotSubscribedPayments(this.merchant.businessEmail).subscribe({
       next: (response: PaymentMethodInfo[]) => {
         if(response == null || response == undefined) return;
         this.notSubscriptions = response;
-        this.showAssignModal = true;
+        this.showAssign = true;
       }
     })
   }
 
-  hideModal(): void{
+  hideAssignModal(): void{
     this.featureSubscriptions = [];
-    this.showAssignModal = false;
+    this.showAssign = false;
   }
+
+  showEditModal(sub: Subscription): void {
+    //TODO: Add logic  
+    this.selectedSubscription = sub;
+    this.showEdit = true;
+  }
+
+  hideEditModal(): void{
+    //TODO: Add logic
+    this.showEdit = false;
+  }
+
+
 
   // If index is > -1 subscriptions is present in featureSubscriptions list
   checkIfContains(subscription: PaymentMethodInfo): boolean {

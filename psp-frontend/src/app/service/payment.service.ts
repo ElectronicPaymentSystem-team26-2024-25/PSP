@@ -8,6 +8,7 @@ import { PaymentExecutionResponse } from '../model/payment-execution-response.mo
 import { MerchantOrder } from '../model/merchant-order.model';
 import { MerchantInfo } from '../model/merchant-info.model';
 import { FailReason } from '../model/fail-reason.model';
+import { PayPalClient } from '../payments/model/payments.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class PaymentService {
 
   unsubscribe(subscription: Subscription): Observable<void> {
     return this.http.delete<void>(environment.apiHost + 'payment/unsubscribe/' + subscription.merchantId + "/" + subscription.paymentMethodId);
+  }
+
+  createPayPalClient(client: PayPalClient, methodId: number): Observable<PayPalClient> {
+    return this.http.post<PayPalClient>(environment.apiHost + 'payment/client/' + methodId, client)
   }
 
   getMerchantsSubscribed(merchantPassword: string): Observable<Subscriptions>{

@@ -1,5 +1,7 @@
-package com.psp.psp.dto;
+package com.psp.psp.dto.subscriptions;
 
+
+import com.psp.psp.dto.payments.PaymentMethodDto;
 
 import java.util.List;
 
