@@ -23,6 +23,6 @@ export class FailedPageComponent {
   }
   
   onFinish(){
-    window.location.href = 'http://localhost:5173/successpage/'+this.id
+    window.location.href = 'https://localhost:5173/successpage/'+this.id
   }
 }

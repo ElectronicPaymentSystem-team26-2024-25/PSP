@@ -75,7 +75,7 @@ public class PaymentService {
     }
     public CreateOrderResponse generatePSPPaymentLink(String merchantPassword, UUID linkUUID){
         CreateOrderResponse response = new CreateOrderResponse();
-        response.setUrl("http://localhost:4200/pay.psp?merchant="+merchantPassword+"&order="+linkUUID.toString());
+        response.setUrl("https://localhost:4200/pay.psp?merchant="+merchantPassword+"&order="+linkUUID.toString());
         return response;
     }
     public MerchantOrder getOrder(String linkUUID){

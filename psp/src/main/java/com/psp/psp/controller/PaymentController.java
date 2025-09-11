@@ -62,13 +62,13 @@ public class PaymentController {
 
     @PostMapping("/execute-payment")
     public ResponseEntity<PaymentResponse> executePayment(@RequestBody PaymentRequest request){
-        String url = "http://localhost:8095/"+request.getPath();
+        String url = "https://localhost:8095/"+request.getPath();
         ResponseEntity<PaymentResponse> response = restTemplate.postForEntity(url, request, PaymentResponse.class);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
     @PostMapping("/order-status")
     public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse bankResponse){
-        String url = "http://localhost:8075/api/orders/order-status";
+        String url = "https://localhost:8075/api/orders/order-status";
         OrderStatusDto orderStatusDto = paymentService.saveOrderStatus(bankResponse);
         ResponseEntity<Object> response = restTemplate.postForEntity(url, orderStatusDto, Object.class);
         return new ResponseEntity<>(HttpStatus.OK);

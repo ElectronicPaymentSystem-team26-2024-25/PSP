@@ -82,9 +82,9 @@ export class PaymentGatewayComponent implements OnInit{
     paymentRequest.merchantPassword = this.merchantInfo?.merchantPassword!
     paymentRequest.merchantOrderId = this.merchantOrder?.merchantOrderId!
     paymentRequest.merchantTimestamp = this.merchantOrder?.merchantTimestamp!
-    paymentRequest.errorUrl = 'http://localhost:4200/error/'+paymentRequest.merchantOrderId
-    paymentRequest.failedUrl = 'http://localhost:4200/fail/'+paymentRequest.merchantOrderId
-    paymentRequest.successUrl = 'http://localhost:4200/success/'+paymentRequest.merchantOrderId
+    paymentRequest.errorUrl = 'https://localhost:4200/error/'+paymentRequest.merchantOrderId
+    paymentRequest.failedUrl = 'https://localhost:4200/fail/'+paymentRequest.merchantOrderId
+    paymentRequest.successUrl = 'https://localhost:4200/success/'+paymentRequest.merchantOrderId
     if(this.selectedPaymentMethod.type == 'bank'){
       this.executePaymentInBank(paymentRequest)
     }
