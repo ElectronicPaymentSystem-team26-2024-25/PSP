@@ -33,10 +33,18 @@ public class WebSecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.cors(cors -> cors.configurationSource(corsConfiguration()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/", "/home", "/payment/merchant/**", "payment/order-status", "payment/create-order", "payment/order/**").permitAll()
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/auth/**",
+                                        "/",
+                                        "/home",
+                                        "/payment/merchant/**",
+                                        "payment/order-status",
+                                        "payment/create-order",
+                                        "payment/order/**")
+                                .permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -48,10 +56,11 @@ public class WebSecurityConfig{
         configuration.setAllowedOrigins(List.of("https://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT","DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 }

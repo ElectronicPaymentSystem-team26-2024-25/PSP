@@ -19,7 +19,7 @@ public class AuthService {
 
     public AuthenticationResponse Login(LoginCredentials credentials){
         User user = iUserRepository.findByEmail(credentials.getEmail());
-        if(user == null || !user.validatePassword(credentials.getPassword())) return null;
+        if(user == null || !user.validatePassword(credentials.getPassword())) return null; //TODO: Return message indicating wrong authentication
 
         String token = jwtService.generateJwtToken(user);
         AuthenticationResponse response = new AuthenticationResponse();
