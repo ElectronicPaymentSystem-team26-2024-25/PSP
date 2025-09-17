@@ -106,10 +106,11 @@ public class PaymentService {
         return reason;
     }
 
+    // TODO: Fix this endpoints
     public String getPaymentServiceLink(Long paymentMethodId, String endpointName){
         PaymentMethod paymentMethod = PaymentConfigurationService.getPaymentMethod(paymentMethodId);
-        String endpointApi = paymentMethod.getEndpoints().get("api");
-        String endpointUrl = paymentMethod.getEndpoints().get(endpointName);
+        String endpointApi = "";
+        String endpointUrl = "";
         if(endpointUrl == null || endpointUrl.isEmpty()) throw new IllegalArgumentException("Cannot find endpoint with NAME: " + endpointName);
         return endpointApi + endpointUrl;
     }

@@ -1,26 +1,31 @@
 package com.psp.psp.model;
 
 import com.psp.psp.enumerations.PaymentType;
+import jakarta.persistence.*;
 
-import java.util.HashMap;
-
+@Entity
+@Table(name = "payment_methods")
 public class PaymentMethod {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true)
     private Long id;
+    @Column(nullable = false, name = "name")
     private String name;
+    @Column(nullable = false, name = "type")
     private PaymentType type;
+    @Column(nullable = false, name = "is_active")
     private boolean isActive;
-    private HashMap<String, String> endpoints;
 
     public PaymentMethod() {
     }
 
-    public PaymentMethod(Long id, String name, String version, PaymentType type, boolean isActive, HashMap<String, String> endpoints) {
+    public PaymentMethod(Long id, String name, PaymentType type, boolean isActive) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.isActive = isActive;
-        this.endpoints = endpoints;
     }
 
     public Long getId() {
@@ -53,13 +58,5 @@ public class PaymentMethod {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-    }
-
-    public HashMap<String, String> getEndpoints() {
-        return endpoints;
-    }
-
-    public void setEndpoints(HashMap<String, String> endpoints) {
-        this.endpoints = endpoints;
     }
 }

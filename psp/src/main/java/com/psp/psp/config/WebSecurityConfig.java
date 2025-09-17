@@ -37,6 +37,7 @@ public class WebSecurityConfig{
                         auth.requestMatchers("/auth/**",
                                         "/",
                                         "/home",
+                                        "paymentMethod/**",
                                         "/payment/merchant/**",
                                         "payment/order-status",
                                         "payment/create-order",

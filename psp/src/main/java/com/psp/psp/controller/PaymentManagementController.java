@@ -1,13 +1,15 @@
 package com.psp.psp.controller;
 
 import com.psp.psp.dto.payments.PaymentMethodDto;
-import com.psp.psp.model.PaymentMethod;
 import com.psp.psp.service.PaymentManagementService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/paymentManagement", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -17,25 +19,25 @@ public class PaymentManagementController {
     private PaymentManagementService paymentService;
 
     @GetMapping("")
-    public ResponseEntity<PaymentMethodDto> getMethods(HttpServletResponse response){
-        throw new UnsupportedOperationException();
+    public ResponseEntity<List<PaymentMethodDto>> getMethods(HttpServletResponse response){
+        return paymentService.getPaymentMethods();
     }
 
     @PostMapping("create")
     public ResponseEntity<PaymentMethodDto> createMethod(@RequestBody PaymentMethodDto paymentDto,
                                                          HttpServletResponse response){
-        throw new UnsupportedOperationException();
+        return paymentService.createMethod(paymentDto);
     }
 
     @DeleteMapping("delete")
-    public ResponseEntity<PaymentMethodDto> deleteMethod(@RequestBody PaymentMethodDto paymentDto,
-                                                         HttpServletResponse response){
-        throw new UnsupportedOperationException();
+    public ResponseEntity<String> deleteMethod(@RequestBody PaymentMethodDto paymentDto,
+                                 HttpServletResponse response){
+        return paymentService.deleteMethod(paymentDto.getId());
     }
 
-    @PatchMapping("update")
+    @PutMapping("update")
     public ResponseEntity<PaymentMethodDto> updateMethod(@RequestBody PaymentMethodDto paymentDto,
-                                                         HttpServletResponse response){
-        throw new UnsupportedOperationException();
+                                                               HttpServletResponse response){
+        return paymentService.updateMethod(paymentDto);
     }
 }

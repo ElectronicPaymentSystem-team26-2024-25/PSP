@@ -10,3 +10,7 @@ INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_act
 INSERT INTO public.merchant_bank (ID, MERCHANT_ID, MERCHANT_PASSWORD, PORT, BANK_NAME)
 VALUES (1, '123e4567-e89b-12d3-a456-426614174000', '789e1234-e89b-56d3-a456-426614174111', '8060', 'Banka 1');
 
+INSERT INTO public.payment_methods (id, name, type, is_active) VALUES (1, 'PayPal', 1, true);
+INSERT INTO public.payment_methods (id, name, type, is_active) VALUES (2, 'Bank', 0, true);
+INSERT INTO public.payment_methods (id, name, type, is_active) VALUES (3, 'Crypto', 2, false);
+
