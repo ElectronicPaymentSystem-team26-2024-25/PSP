@@ -15,6 +15,14 @@ export interface PaymentMethodInfo{
     type: string;
 }
 
+
+export interface PaymentMethod{
+    id: number;
+    name: string;
+    type: PaymentType;
+    active: boolean;
+}
+
 export enum PaymentType{
     bank,
     wallet,

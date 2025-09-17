@@ -45,6 +45,9 @@ export class LoginComponent {
           if (this.user.type === "merchant") {
             this.router.navigate(['/merchant-page']);
           }
+          else if(this.user.type === 'admin'){
+            this.router.navigate(['/administration']);
+          }
           else{
             //For now its nothing
           }

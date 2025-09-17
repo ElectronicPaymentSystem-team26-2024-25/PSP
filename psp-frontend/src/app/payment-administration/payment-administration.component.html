@@ -1,0 +1,34 @@
+<div class="container mt-3 mb-3">
+    <h1 class="fw-bold text-start mb-4">Payment method administration panel</h1>
+
+    <div class="card shadow-sm">
+      <h2 class="card-header bg-light fw-bold">Payment Methods</h2>
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Status</th>
+              <th scope="col">Type</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <tr *ngFor="let met of methods; let i = index;">
+              <td>{{met.name}}</td>
+              <td>{{met.active ? 'Active' : 'Inactive'}}</td>
+              <td>{{met.type}}</td>
+              <td>
+                <span><a ><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
+                <span><a ><img src="../../assets/icons/icons8-delete-50.png" class="icon-size"></a></span>
+                <span><a ><img src="../../assets/icons/icons8-activate-50.png" class="icon-size"></a></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="form-group mb-3 text-left">
+            <button class="btn btn-primary btn-block">Add new payment method</button>
+        </div>
+      </div>
+    </div>
+</div>

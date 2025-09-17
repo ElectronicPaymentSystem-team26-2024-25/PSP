@@ -9,6 +9,7 @@ import { ForbiddenComponent } from './auth/forbidden/forbidden.component';
 import { SuccessPageComponent } from './success-page/success-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { FailedPageComponent } from './failed-page/failed-page.component';
+import { PaymentAdministrationComponent } from './payment-administration/payment-administration.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'success/:orderId', component: SuccessPageComponent},
   {path: 'error/:orderId', component: ErrorPageComponent},
   {path: 'fail/:orderId', component: FailedPageComponent},
+  {path: 'administration', component: PaymentAdministrationComponent, canActivate: [AuthGuard, RoleGuard], data: {expectedRoles: ['admin']}}
 ];
 
 @NgModule({
