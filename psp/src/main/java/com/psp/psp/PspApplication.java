@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PspApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PspApplication.class, args);
+
+        System.out.println(System.getProperty("java.home"));
+        SpringApplication.run(PspApplication.class, args);
 	}
 
 }
