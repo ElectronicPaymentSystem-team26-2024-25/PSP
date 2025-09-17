@@ -8,7 +8,6 @@ public class PaymentMethod {
 
     private Long id;
     private String name;
-    private String version;
     private PaymentType type;
     private boolean isActive;
     private HashMap<String, String> endpoints;
@@ -19,7 +18,6 @@ public class PaymentMethod {
     public PaymentMethod(Long id, String name, String version, PaymentType type, boolean isActive, HashMap<String, String> endpoints) {
         this.id = id;
         this.name = name;
-        this.version = version;
         this.type = type;
         this.isActive = isActive;
         this.endpoints = endpoints;
@@ -39,14 +37,6 @@ public class PaymentMethod {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public PaymentType getType() {
