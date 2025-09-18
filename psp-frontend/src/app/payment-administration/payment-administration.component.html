@@ -21,14 +21,51 @@
               <td>
                 <span><a ><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
                 <span><a (click)="deleteMethod(met)"><img src="../../assets/icons/icons8-delete-50.png" class="icon-size"></a></span>
-                <span><a ><img src="../../assets/icons/icons8-activate-50.png" class="icon-size"></a></span>
               </td>
             </tr>
           </tbody>
         </table>
         <div class="form-group mb-3 text-left">
-            <button class="btn btn-primary btn-block">Add new payment method</button>
+            <button (click)="showCreateModal()" class="btn btn-primary btn-block">Add new payment method</button>
         </div>
       </div>
     </div>
+
+
+    <!-- Modal for creating payment method -->
+     <div class="overlay" *ngIf="showCreate">
+      <div class="centered-content" id="createModalDiv">
+        <div>
+          <h3 class="d-flex justify-content-between align-items-center font-weight-bold title mb-5">
+            <span>Create new subscription</span>
+            <span><a (click)="hideCreateModal()"><img src="../../assets/icons/icons8-close-50.png" class="icon-size"></a></span>
+          </h3>
+          <form [formGroup]="createForm" (ngSubmit)="create()">
+              <div class="row d-flex">
+                  <div class="form-group mb-3">
+                      <label class="label">Name </label>
+                      <input formControlName="name" type="text" class="form-control">
+                  </div>
+                  <div class="form-group mb-3">
+                      <label class="label">Type </label>
+                      <input formControlName="type" type="radio" id="crypto" value="Crypto" class="form-control"> <label for="crypto">Crypto</label>
+                      <input formControlName="type" type="radio" id="bank" value="Bank" class="form-control"> <label for="bank">Bank</label>
+                      <input formControlName="type" type="radio" id="wallet" value="Wallet" class="form-control"> <label for="wallet">Wallet</label>
+                  </div>
+                  <div class="form-group mb-3">
+                      <label class="label">Address </label>
+                      <input formControlName="address" type="text" class="form-control">
+                  </div>
+                  <div class="form-group mb-3">
+                      <label class="label">Endpoint </label>
+                      <input formControlName="endpoint" type="text" class="form-control">
+                  </div>
+                  <div class="form-group mb-3 text-center">
+                      <button class="btn btn-primary btn-block" type="submit">Create</button>
+                  </div>
+              </div>
+          </form>
+        </div>
+      </div>
+     </div>
 </div>
