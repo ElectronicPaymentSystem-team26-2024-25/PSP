@@ -3,7 +3,10 @@ package com.psp.psp.service;
 import com.psp.psp.converter.PaymentMethodConverter;
 import com.psp.psp.dto.payments.PaymentMethodDto;
 import com.psp.psp.model.PaymentMethod;
+import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IPaymentManagementRepository;
+import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
+import jdk.jfr.ContentType;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,21 +17,24 @@ import java.util.List;
 public class PaymentManagementService {
 
     private final IPaymentManagementRepository repository;
+    private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
 
-    public PaymentManagementService(IPaymentManagementRepository repository) {
+    public PaymentManagementService(IPaymentManagementRepository repository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
         this.repository = repository;
+        this.iPaymentSubscriptionRepository = iPaymentSubscriptionRepository;
     }
 
-    public ResponseEntity<String> deleteMethod(Long id) {
+
+    public boolean deleteMethod(Long id) {
         try {
+            //TODO: This should be transaction
             repository.deleteById(id);
-            return ResponseEntity.ok("Payment method deleted successfully.");
-        }
-        catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.badRequest().body("Payment method with id " + id + " not found.");
+            List<Subscription> subscriptionsToDelete = iPaymentSubscriptionRepository.findByPaymentMethodId(id);
+            subscriptionsToDelete.forEach(iPaymentSubscriptionRepository::delete);
+            return true;
         }
         catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Unexpected error: " + e.getMessage());
+            return false;
         }
     }
 

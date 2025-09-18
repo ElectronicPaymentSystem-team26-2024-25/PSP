@@ -14,4 +14,17 @@ export class AdministrationService {
   getMethods(): Observable<PaymentMethod[]> {
     return this.http.get<PaymentMethod[]>(environment.apiHost + 'paymentManagement');
   }
+
+  createMethod(paymentMethod: PaymentMethod): Observable<PaymentMethod> {
+    return this.http.post<PaymentMethod>(environment.apiHost + 'paymentManagement/create', paymentMethod);
+  }
+
+  updateMethod(paymentMethod: PaymentMethod): Observable<PaymentMethod> {
+    return this.http.put<PaymentMethod>(environment.apiHost + 'paymentManagement/update', paymentMethod);
+  }
+
+  deleteMethod(paymentMethod: PaymentMethod): Observable<void> {
+    return this.http.delete<void>(environment.apiHost + 'paymentManagement/delete/' + paymentMethod.id);
+  }
+
 }

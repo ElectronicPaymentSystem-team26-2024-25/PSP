@@ -12,6 +12,7 @@ import com.psp.psp.model.Merchant;
 import com.psp.psp.model.PaymentMethod;
 import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
+import com.psp.psp.repository.interfaces.IPaymentManagementRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,15 @@ import java.util.stream.Collectors;
 @Service
 public class MerchantService {
 
-    @Autowired
-    private PaymentService paymentService;
-
     private final IMerchantRepository iMerchantRepository;
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
+    private final IPaymentManagementRepository iPaymentManagementRepository;
 
-    public MerchantService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
+
+    public MerchantService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository, IPaymentManagementRepository iPaymentManagementRepository) {
         this.iMerchantRepository = iMerchantRepository;
         this.iPaymentSubscriptionRepository = iPaymentSubscriptionRepository;
+        this.iPaymentManagementRepository = iPaymentManagementRepository;
     }
 
     public SubscriptionDto changeStatus(SubscriptionDto subscriptionDto){
@@ -82,8 +83,8 @@ public class MerchantService {
     private List<PaymentMethod> getPaymentMethods(Merchant merchant, boolean isSubscribed) {
         List<Subscription> subscriptions = iPaymentSubscriptionRepository.findByMerchantId(merchant.getId());
         if (subscriptions == null || subscriptions.isEmpty()) throw new IllegalStateException("No subscriptions found for the merchant.");
-        List<PaymentMethod> paymentMethods = PaymentConfigurationService.readPaymentMethods();
-        if (paymentMethods == null || paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
+        List<PaymentMethod> paymentMethods = iPaymentManagementRepository.findAll();
+        if (paymentMethods.isEmpty()) throw new IllegalStateException("No payment methods available.");
 
         Set<Long> subscribedMethodIds = subscriptions.stream()
                 .map(Subscription::getPaymentMethodId)

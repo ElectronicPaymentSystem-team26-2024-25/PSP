@@ -26,11 +26,18 @@ export class PaymentAdministrationComponent implements OnInit{
     })
   }
 
-  /**
-   * paymentTypeToString
-method: PaymentMethodType   */
-  public paymentTypeToString(method: PaymentType) {
-    return PaymentTypeToString(method);
+  deleteMethod(method: PaymentMethod): void{
+      const id = method.id;
+      this.service.deleteMethod(method).subscribe({
+        next: (response: any) => {
+            alert('Deleted payment method with id: ' + id);
+            const index = this.methods.findIndex(met => met.id === id);
+            if(index < 0) return;
+            this.methods.splice(index, 1);
+        },
+        error: (err: any) => {
+          alert(err);
+        }
+      })
   }
-
 }

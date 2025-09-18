@@ -29,10 +29,11 @@ public class PaymentManagementController {
         return paymentService.createMethod(paymentDto);
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<String> deleteMethod(@RequestBody PaymentMethodDto paymentDto,
+    @DeleteMapping("delete/{paymentId}")
+    public ResponseEntity<Void> deleteMethod(@PathVariable("paymentId") Long paymentId,
                                  HttpServletResponse response){
-        return paymentService.deleteMethod(paymentDto.getId());
+        if(paymentService.deleteMethod(paymentId)) return ResponseEntity.ok().build();
+        return ResponseEntity.internalServerError().build();
     }
 
     @PutMapping("update")
