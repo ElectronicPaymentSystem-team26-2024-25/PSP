@@ -6,6 +6,7 @@ public class PaymentMethodDto {
     private Long id;
     private String name;
     private PaymentType type;
+    private boolean isActive;
 
     public String getName() {
         return name;
@@ -29,5 +30,13 @@ public class PaymentMethodDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

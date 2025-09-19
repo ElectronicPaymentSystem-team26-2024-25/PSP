@@ -14,6 +14,7 @@ import { FailedPageComponent } from './failed-page/failed-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { PaypalClientComponent } from './payments/paypal-client/paypal-client.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PaymentAdministrationComponent } from './payment-administration/payment-administration.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SuccessPageComponent,
     FailedPageComponent,
     ErrorPageComponent,
-    PaypalClientComponent
+    PaypalClientComponent,
+    PaymentAdministrationComponent
   ],
   imports: [
     ReactiveFormsModule,
