@@ -9,3 +9,14 @@ export interface PaymentExecutionRequest{
     failedUrl: string,
     path: string
 }
+
+export interface PayPalRequest{
+    merchantId: string,
+    amount: string,
+    merchantOrderId: string,
+    merchantTimestamp: Date,
+    sucessUrl: string,
+    errorUrl: string,
+    failedUrl: string,
+    brandName: string,
+}

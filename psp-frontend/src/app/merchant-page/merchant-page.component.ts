@@ -3,7 +3,7 @@ import { MerchantService } from '../service/merchant.service';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Merchant } from '../model/merchant.model';
 import { User } from '../model/user.model';
-import { PaymentMethodInfo, Subscription, Subscriptions } from '../model/subscription.model';
+import { PaymentMethod, PaymentMethodInfo, Subscription, Subscriptions } from '../model/subscription.model';
 import { PaymentService } from '../service/payment.service';
 
 @Component({
@@ -36,8 +36,8 @@ export class MerchantPageComponent implements OnInit{
   }
 
   subscriptions: Subscription[] = [];
-  notSubscriptions: PaymentMethodInfo[] = []
-  featureSubscriptions: PaymentMethodInfo[] = [];
+  notSubscriptions: PaymentMethod[] = []
+  featureSubscriptions: PaymentMethod[] = [];
 
   showAssign: boolean = false;
   showEdit: boolean = false;
@@ -58,11 +58,11 @@ export class MerchantPageComponent implements OnInit{
     })
   }
 
-  addToSubscribe(subscription: PaymentMethodInfo): void {
+  addToSubscribe(subscription: PaymentMethod): void {
       this.featureSubscriptions.push(subscription);
   }
 
-  removeToSubscribe(subscription: PaymentMethodInfo): void {
+  removeToSubscribe(subscription: PaymentMethod): void {
       const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
       if(index < 0) return;
       this.featureSubscriptions.splice(index, 1)
@@ -107,7 +107,7 @@ export class MerchantPageComponent implements OnInit{
 
   showAssignModal(): void{
     this.service.getNotSubscribedPayments(this.merchant.businessEmail).subscribe({
-      next: (response: PaymentMethodInfo[]) => {
+      next: (response: PaymentMethod[]) => {
         if(response == null || response == undefined) return;
         this.notSubscriptions = response;
         this.showAssign = true;
@@ -134,12 +134,12 @@ export class MerchantPageComponent implements OnInit{
 
 
   // If index is > -1 subscriptions is present in featureSubscriptions list
-  checkIfContains(subscription: PaymentMethodInfo): boolean {
+  checkIfContains(subscription: PaymentMethod): boolean {
     const index = this.featureSubscriptions.findIndex(sub => sub.name === subscription.name);
     return index > -1;
   }
 
-  completeItem(subscription: PaymentMethodInfo): void {
+  completeItem(subscription: PaymentMethod): void {
     if(this.checkIfContains(subscription)){
       this.removeToSubscribe(subscription);
       return;

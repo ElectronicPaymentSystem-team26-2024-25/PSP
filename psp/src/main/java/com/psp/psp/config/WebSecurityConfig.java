@@ -39,6 +39,8 @@ public class WebSecurityConfig{
                                         "/home",
                                         "paymentMethod/**",
                                         "/payment/merchant/**",
+                                        "/payment/capture-payment/**",
+                                        "/payment/execute-payment/**",
                                         "payment/order-status",
                                         "payment/create-order",
                                         "payment/order/**")
