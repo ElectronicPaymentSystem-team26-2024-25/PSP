@@ -8,7 +8,8 @@
           <thead>
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Status</th>
+              <th scope="col">Address</th>
+              <th scope="col">Endpoint</th>
               <th scope="col">Type</th>
               <th scope="col">Actions</th>
             </tr>
@@ -16,7 +17,8 @@
           <tbody class="table-group-divider">
             <tr *ngFor="let met of methods; let i = index;">
               <td>{{met.name}}</td>
-              <td>{{met.active ? 'Active' : 'Inactive'}}</td>
+              <td>{{met.address}}</td>
+              <td>{{met.endpoint}}</td>
               <td>{{met.type}}</td>
               <td>
                 <span><a ><img src="../../assets/icons/icons8-edit-50.png" class="icon-size"></a></span>
