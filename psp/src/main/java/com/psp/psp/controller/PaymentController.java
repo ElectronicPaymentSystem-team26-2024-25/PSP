@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import com.psp.psp.enumerations.PaymentStatus;
 
 @RestController
 @RequestMapping(value = "/payment", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,6 +82,49 @@ public class PaymentController {
         ResponseEntity<Object> response = plainRestTemplate.postForEntity(url, orderStatusDto, Object.class);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(value = "/order-status/crypto", consumes = "application/json")
+    public ResponseEntity<Void> updateOrderStatusCrypto(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestBody com.psp.psp.dto.payments.CryptoStatusCallback payload
+    ) {
+        PaymentStatusResponse unified = new PaymentStatusResponse();
+
+        // merchantOrderId je int u PaymentStatusResponse → pokušaj parsiranja
+        try {
+            unified.setMerchantOrderId(Integer.parseInt(payload.getMerchantOrderId().replaceAll("\\D", "")));
+        } catch (NumberFormatException e) {
+            // fallback: 0 ako ne može da se parsira
+            unified.setMerchantOrderId(0);
+        }
+
+        // PaymentStatus enum mapping
+        PaymentStatus mapped;
+        switch (payload.getStatus().toUpperCase()) {
+            case "SUCCESS" -> mapped = PaymentStatus.SUCCESS;
+            case "FAILED", "TIMEOUT" -> mapped = PaymentStatus.FAIL;
+            case "PENDING" -> mapped = PaymentStatus.IN_PROGRESS;
+            default -> mapped = PaymentStatus.ERROR;
+        }
+        unified.setStatus(mapped);
+
+
+        // txid stavljamo u failReason da se ne izgubi info
+        if (payload.getTxid() != null && !payload.getTxid().isBlank()) {
+            unified.setFailReason("txid=" + payload.getTxid());
+        }
+
+        // Sačuvaj kroz postojeći servis
+        OrderStatusDto orderStatusDto = paymentService.saveOrderStatus(unified);
+
+        // Prosledi webshop-u
+        String url = "http://localhost:8075/api/orders/order-status";
+        restTemplate.postForEntity(url, orderStatusDto, Void.class);
+
+        return ResponseEntity.ok().build();
+    }
+
+
     @PostMapping("/create-order")
     public ResponseEntity<CreateOrderResponse> createOrder(@RequestBody CreateOrderRequest orderRequest){
         MerchantOrder order = paymentService.saveOrder(orderRequest);
