@@ -1,7 +1,5 @@
 package com.psp.psp.service;
 
-import com.psp.psp.config.payments.model.PaymentRegistry;
-import com.psp.psp.config.payments.service.PaymentConfigurationService;
 import com.psp.psp.dto.merchant.MerchantInfoDto;
 import com.psp.psp.dto.orders.CreateOrderRequest;
 import com.psp.psp.dto.orders.CreateOrderResponse;
@@ -11,10 +9,7 @@ import com.psp.psp.dto.payments.PaymentStatusResponse;
 import com.psp.psp.dto.subscriptions.SubscriptionsDto;
 import com.psp.psp.enumerations.PaymentStatus;
 import com.psp.psp.model.*;
-import com.psp.psp.repository.interfaces.IMerchantBankRepository;
-import com.psp.psp.repository.interfaces.IMerchantOrderRepository;
-import com.psp.psp.repository.interfaces.IMerchantRepository;
-import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
+import com.psp.psp.repository.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +22,17 @@ public class PaymentService {
 
     private final IMerchantRepository iMerchantRepository;
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
+    private final IPaymentManagementRepository iPaymentManagementRepository;
+
     @Autowired
     IMerchantOrderRepository iMerchantOrderRepository;
     @Autowired
     IMerchantBankRepository iMerchantBankRepository;
 
-    public PaymentService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
+    public PaymentService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository, IPaymentManagementRepository iPaymentManagementRepository) {
         this.iMerchantRepository = iMerchantRepository;
         this.iPaymentSubscriptionRepository = iPaymentSubscriptionRepository;
+        this.iPaymentManagementRepository = iPaymentManagementRepository;
     }
 
     public boolean unsubscribe(Long merchantId, Long paymentMethodId){
@@ -45,11 +43,11 @@ public class PaymentService {
     }
 
     public SubscriptionsDto subscribe(SubscriptionsDto subscriptionsDto){
-        if(subscriptionsDto.getPaymentMethods().size() < 1) throw new IllegalStateException("Must be at least one payment method to subscribe to.");
+        if(subscriptionsDto.getPaymentMethods().isEmpty()) throw new IllegalStateException("Must be at least one payment method to subscribe to.");
         Merchant merchant = iMerchantRepository.findByBusinessEmail(subscriptionsDto.getMerchantEmail());
         if(merchant == null) throw new IllegalArgumentException("Merchant with the provided email does not exist.");
 
-        List<PaymentMethod> paymentMethods = PaymentConfigurationService.readPaymentMethods();
+        List<PaymentMethod> paymentMethods = iPaymentManagementRepository.findAll();
         subscriptionsDto.getPaymentMethods().forEach(subscription ->{
             PaymentMethod method = paymentMethods.stream()
                     .filter(paymentMethod -> paymentMethod.getName().equals(subscription.getName()) && paymentMethod.getType().equals(subscription.getType()))
@@ -106,18 +104,13 @@ public class PaymentService {
         return reason;
     }
 
-    // TODO: Fix this endpoints
-    public String getPaymentServiceLink(Long paymentMethodId, String endpointName){
-        PaymentMethod paymentMethod = PaymentConfigurationService.getPaymentMethod(paymentMethodId);
-        String endpointApi = "";
-        String endpointUrl = "";
-        if(endpointUrl == null || endpointUrl.isEmpty()) throw new IllegalArgumentException("Cannot find endpoint with NAME: " + endpointName);
-        return endpointApi + endpointUrl;
+    public String getPaymentServiceLink(Long paymentMethodId){
+        PaymentMethod paymentMethod = iPaymentManagementRepository.getReferenceById(paymentMethodId);
+        return paymentMethod.getEndpoint();
     }
 
     public String getPaymentServiceAddress(Long paymentMethodId){
-        PaymentRegistry paymentRegistry = PaymentConfigurationService.getPaymentRegistry(paymentMethodId);
-        return paymentRegistry.getAddress();
+        PaymentMethod paymentMethod = iPaymentManagementRepository.getReferenceById(paymentMethodId);
+        return paymentMethod.getAddress();
     }
-
 }

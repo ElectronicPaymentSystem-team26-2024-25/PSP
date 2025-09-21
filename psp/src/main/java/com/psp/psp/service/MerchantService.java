@@ -1,6 +1,5 @@
 package com.psp.psp.service;
 
-import com.psp.psp.config.payments.service.PaymentConfigurationService;
 import com.psp.psp.converter.MerchantConverter;
 import com.psp.psp.converter.PaymentMethodConverter;
 import com.psp.psp.converter.SubscriptionConverter;
@@ -14,7 +13,6 @@ import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
 import com.psp.psp.repository.interfaces.IPaymentManagementRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

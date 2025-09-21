@@ -11,8 +11,7 @@ import java.util.List;
 public class PaymentMethodConverter {
 
     public static PaymentMethod convertFromDto(PaymentMethodDto dto){
-        PaymentMethod method = new PaymentMethod(dto.getId(), dto.getName(), dto.getType(), dto.isActive());
-        return method;
+        return new PaymentMethod(dto.getId(), dto.getName(), dto.getType(), dto.getAddress(), dto.getEndpoint());
     }
 
     public static PaymentMethodDto convertToDto(PaymentMethod method){
@@ -20,7 +19,8 @@ public class PaymentMethodConverter {
         dto.setId(method.getId());
         dto.setName(method.getName());
         dto.setType(method.getType());
-        dto.setActive(method.isActive());
+        dto.setAddress(method.getAddress());
+        dto.setEndpoint(method.getEndpoint());
         return dto;
     }
 

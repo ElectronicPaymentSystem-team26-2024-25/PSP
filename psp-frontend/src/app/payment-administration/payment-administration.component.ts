@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentMethod, PaymentType, StringToPaymentType } from '../model/subscription.model';
+import { PaymentMethod, StringToPaymentType } from '../model/subscription.model';
 import { AdministrationService } from '../service/administration.service';
-import { PaymentTypeToString } from '../model/subscription.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-payment-administration',
@@ -16,13 +15,6 @@ export class PaymentAdministrationComponent implements OnInit{
   showCreate: boolean = false;
   showEdit: boolean = false;
 
-  createForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      type: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
-      endpoint: new FormControl('', [Validators.required])
-    });
-
   constructor(private service: AdministrationService) {}
 
   ngOnInit(): void {
@@ -33,6 +25,31 @@ export class PaymentAdministrationComponent implements OnInit{
       }
     })
   }
+  
+  
+  noSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    if (control.value && control.value.includes(' ')) {
+      return { noSpaces: true };
+    }
+    return null;
+  }
+
+  typeValidator(control: AbstractControl): ValidationErrors | null {
+    const allowedTypes = ['Crypto', 'Wallet', 'Bank'];
+    if (control.value && !allowedTypes.includes(control.value)) {
+      return { invalidType: true };
+    }
+    return null;
+  }
+
+  
+  createForm = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      type: new FormControl('', [Validators.required, this.typeValidator]),
+      address: new FormControl('', [Validators.required, this.noSpacesValidator]),
+      endpoint: new FormControl('', [Validators.required, this.noSpacesValidator])
+    });
+
 
   deleteMethod(method: PaymentMethod): void{
       const id = method.id;
@@ -68,7 +85,8 @@ export class PaymentAdministrationComponent implements OnInit{
         id: 0,
         name: this.createForm.value.name || "",
         type: desiredType,
-        active: true
+        address: this.createForm.value.address || "",
+        endpoint: this.createForm.value.endpoint || ""
       }
       this.service.createMethod(paymentMethod).subscribe({
         next: (response: PaymentMethod) => {

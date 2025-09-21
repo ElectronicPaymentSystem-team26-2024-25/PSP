@@ -20,7 +20,8 @@ export interface PaymentMethod{
     id: number;
     name: string;
     type: PaymentType;
-    active: boolean;
+    address: string;
+    endpoint: string;
 }
 
 export enum PaymentType{
