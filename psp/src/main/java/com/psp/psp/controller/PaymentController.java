@@ -6,10 +6,7 @@ import com.psp.psp.dto.orders.CreateOrderRequest;
 import com.psp.psp.dto.orders.CreateOrderResponse;
 import com.psp.psp.dto.orders.FailReasonDto;
 import com.psp.psp.dto.orders.OrderStatusDto;
-import com.psp.psp.dto.payments.PaymentApproveLink;
-import com.psp.psp.dto.payments.PaymentRequest;
-import com.psp.psp.dto.payments.PaymentResponse;
-import com.psp.psp.dto.payments.PaymentStatusResponse;
+import com.psp.psp.dto.payments.*;
 import com.psp.psp.dto.subscriptions.SubscriptionsDto;
 import com.psp.psp.model.MerchantOrder;
 import com.psp.psp.service.MerchantService;
@@ -62,10 +59,14 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/process-payment/{paymentMethodId}")
-    public ResponseEntity<PaymentApproveLink> processPaypalPayment(@PathVariable("paymentMethodId") Long paymentMethodId, @RequestBody PaymentRequest paymentRequest){
-        String endpointUrl = paymentService.getPaymentServiceLink(paymentMethodId);
-        String serviceAddress = paymentService.getPaymentServiceAddress(paymentMethodId);
+    public ResponseEntity<PaymentApproveLink> processPaypalPayment(@PathVariable("paymentMethodId") Long paymentMethodId, @RequestBody PayPalRequestDto paymentRequest){
         ResponseEntity<PaymentApproveLink> serviceResponse = restTemplate.postForEntity("https://PAYPAL-SERVICE/api/paypal/payment", paymentRequest, PaymentApproveLink.class);
+        return new ResponseEntity<>(serviceResponse.getBody(), serviceResponse.getStatusCode());
+    }
+
+    @GetMapping(path = "/capture-payment/{orderId}")
+    public ResponseEntity<PayPalResponseDto> capturePayment(@PathVariable("orderId") String orderId){
+        ResponseEntity<PayPalResponseDto> serviceResponse = restTemplate.getForEntity("https://PAYPAL-SERVICE/api/paypal/payment/" + orderId, PayPalResponseDto.class);
         return new ResponseEntity<>(serviceResponse.getBody(), serviceResponse.getStatusCode());
     }
 

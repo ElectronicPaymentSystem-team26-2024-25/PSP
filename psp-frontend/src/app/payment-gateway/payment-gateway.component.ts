@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentMethodInfo, Subscriptions } from '../model/subscription.model';
+import { PaymentMethod, PaymentType, Subscriptions } from '../model/subscription.model';
 import { PaymentService } from '../service/payment.service';
 import { ActivatedRoute } from '@angular/router';
-import { PaymentExecutionRequest } from '../model/payment-execution-request.model';
-import { PaymentExecutionResponse } from '../model/payment-execution-response.model';
+import { PaymentExecutionRequest, PayPalRequest } from '../model/payment-execution-request.model';
+import { PaymentApproveLink, PaymentExecutionResponse } from '../model/payment-execution-response.model';
 import { MerchantOrder } from '../model/merchant-order.model';
 import { MerchantInfo } from '../model/merchant-info.model';
+import { frontend_url } from '../env/environment';
 
 @Component({
   selector: 'app-payment-gateway',
@@ -17,9 +18,13 @@ export class PaymentGatewayComponent implements OnInit{
   orderLink: string = ''
   merchantOrder?: MerchantOrder
   merchantInfo?: MerchantInfo
-  selectedPaymentMethod: PaymentMethodInfo = {
+  
+  selectedPaymentMethod: PaymentMethod = {
+    id: 0,
     name: '',
-    type: ''
+    type: PaymentType.bank,
+    address: '',
+    endpoint: ''
   };
 
   subscription: Subscriptions = {
@@ -54,68 +59,75 @@ export class PaymentGatewayComponent implements OnInit{
     })
   }
 
-  selectPaymentMethod(method: PaymentMethodInfo): void {
+  selectPaymentMethod(method: PaymentMethod): void {
       this.selectedPaymentMethod = method;
   }
 
-  get bankMethods(): PaymentMethodInfo[] {
+  get bankMethods(): PaymentMethod[] {
     return this.subscription.paymentMethods.filter(
-      (method) => method.type === "bank"
+      (method) => method.type === PaymentType.bank
     );
   }
 
-  get walletMethods(): PaymentMethodInfo[] {
+  get walletMethods(): PaymentMethod[] {
     return this.subscription.paymentMethods.filter(
-      (method) => method.type === "wallet"
+      (method) => method.type === PaymentType.wallet
     );
   }
 
-  get cryptoMethods(): PaymentMethodInfo[] {
+  get cryptoMethods(): PaymentMethod[] {
     return this.subscription.paymentMethods.filter(
-      (method) => method.type === "crypto"
+      (method) => method.type === PaymentType.crypto
     );
   }
   executePayment(){
-  const paymentRequest: PaymentExecutionRequest = {
-    merchantId: this.merchantOrder?.merchantId!,
-    merchantPassword: this.merchantInfo?.merchantPassword!,
-    amount: this.merchantOrder?.amount!,
-    merchantOrderId: this.merchantOrder?.merchantOrderId!,
-    merchantTimestamp: this.merchantOrder?.merchantTimestamp!,
-    successUrl: `https://localhost:4200/success/${this.merchantOrder?.merchantOrderId!}`,
-    failedUrl:  `https://localhost:4200/fail/${this.merchantOrder?.merchantOrderId!}`,
-    errorUrl:   `https://localhost:4200/error/${this.merchantOrder?.merchantOrderId!}`,
-    path: '' 
-  };
+    if(this.selectedPaymentMethod.type === PaymentType.wallet){
+      this.executePaymentWithPayPal()
+    }
 
-  if (this.selectedPaymentMethod.type === 'bank') {
-    const bankPort: string = this.merchantInfo?.port!;
-    paymentRequest.path = `api/cardpayment/cardpaymentform/${bankPort}`;
-    this.redirectViaPsp(paymentRequest);
-    return;
-  }
+    let paymentRequest: PaymentExecutionRequest = {merchantId: '', merchantPassword: '', amount: 0, errorUrl: '', failedUrl: '', merchantOrderId: 0, merchantTimestamp: new Date, successUrl: '', path: ''}
+    paymentRequest.merchantId = this.merchantOrder?.merchantId!
+    paymentRequest.amount = this.merchantOrder?.amount!
+    paymentRequest.merchantPassword = this.merchantInfo?.merchantPassword!
+    paymentRequest.merchantOrderId = this.merchantOrder?.merchantOrderId!
+    paymentRequest.merchantTimestamp = this.merchantOrder?.merchantTimestamp!
+    paymentRequest.errorUrl = 'https://localhost:4200/error/'+paymentRequest.merchantOrderId
+    paymentRequest.failedUrl = 'https://localhost:4200/fail/'+paymentRequest.merchantOrderId
+    paymentRequest.successUrl = 'https://localhost:4200/success/'+paymentRequest.merchantOrderId
+    if(this.selectedPaymentMethod.type == PaymentType.bank){
+      this.executePaymentInBank(paymentRequest)
+    }
 
-  if (this.selectedPaymentMethod.type === 'crypto') {
+    if (this.selectedPaymentMethod.type === PaymentType.crypto) {
     // CRYPTO: minimalna izmena – samo postavi path na crypto init
     paymentRequest.path = `api/crypto/payment`;
     this.redirectViaPsp(paymentRequest);
     return;
   }
+  }
 
-}
-
-/** Jedinstveno slanje ka PSP-u i redirect na paymentUrl (bank i crypto dele isti tok) */
-private redirectViaPsp(paymentRequest: PaymentExecutionRequest) {
-  this.paymentService.sendBankPaymentRequest(paymentRequest, this.merchantInfo?.port || '')
-    .subscribe({
-      next: (response: PaymentExecutionResponse) => {
-        window.location.href = response.paymentUrl;
+  executePaymentWithPayPal() : void {
+    let merchantOrderId = this.merchantOrder?.merchantId || ""
+    const paymentRequest : PayPalRequest = {
+      merchantId: merchantOrderId,
+      amount: String(this.merchantOrder?.amount) || "",
+      merchantOrderId: String(this.merchantOrder?.merchantOrderId) || "",
+      merchantTimestamp: this.merchantOrder?.merchantTimestamp!,
+      sucessUrl: frontend_url + '/success/' + merchantOrderId,
+      errorUrl: frontend_url + '/error/' + merchantOrderId,
+      failedUrl: frontend_url + '/fail/' + merchantOrderId,
+      brandName: "Telekom Inc."
+    }
+    this.paymentService.sendPayPalRequest(paymentRequest).subscribe({
+      next: (response: PaymentApproveLink) => {
+        window.location.href = response.message
       },
       error: () => {
-        alert('Error while reaching payment processor');
+        alert('Error while reaching: ' + this.selectPaymentMethod.name)
       }
-    });
-}
+    })
+  }
+
 
   executePaymentInBank(paymentRequest: PaymentExecutionRequest){
     //dobiti port banke na osnovu merchant Id iz baze
@@ -130,4 +142,18 @@ private redirectViaPsp(paymentRequest: PaymentExecutionRequest) {
       }
     })
   }
+
+  /** Jedinstveno slanje ka PSP-u i redirect na paymentUrl (bank i crypto dele isti tok) */
+  private redirectViaPsp(paymentRequest: PaymentExecutionRequest) {
+    this.paymentService.sendBankPaymentRequest(paymentRequest, this.merchantInfo?.port || '')
+      .subscribe({
+        next: (response: PaymentExecutionResponse) => {
+          window.location.href = response.paymentUrl;
+        },
+        error: () => {
+          alert('Error while reaching payment processor');
+        }
+      });
+  }
+
 }

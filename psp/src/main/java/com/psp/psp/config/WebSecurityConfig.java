@@ -44,7 +44,8 @@ public class WebSecurityConfig{
                                 "payment/order/**",
                                 "/payment/order-status/**",          // callback iz crypto servisa
                                 "/payment/merchant/subscribed"  ,
-                                "/payment/execute-payment")
+                                "/payment/execute-payment/**",
+                                "/payment/capture-payment")
                                 .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
