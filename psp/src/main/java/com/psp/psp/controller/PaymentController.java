@@ -16,6 +16,7 @@ import com.psp.psp.service.MerchantService;
 import com.psp.psp.service.PaymentService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,10 @@ public class PaymentController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    @Qualifier("plainRestTemplate")
+    private RestTemplate plainRestTemplate;
 
     @PostMapping("/subscribe")
     public ResponseEntity<SubscriptionsDto> subscribe(
@@ -65,7 +70,7 @@ public class PaymentController {
 
     @PostMapping("/execute-payment")
     public ResponseEntity<PaymentResponse> executePayment(@RequestBody PaymentRequest request){
-        String url = "https://localhost:8095/"+request.getPath();
+        String url = "https://Bank1/api/cardpayment/cardpaymentform";
         ResponseEntity<PaymentResponse> response = restTemplate.postForEntity(url, request, PaymentResponse.class);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
@@ -73,7 +78,7 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> updateOrderStatus(@RequestBody PaymentStatusResponse bankResponse){
         String url = "https://localhost:8075/api/orders/order-status";
         OrderStatusDto orderStatusDto = paymentService.saveOrderStatus(bankResponse);
-        ResponseEntity<Object> response = restTemplate.postForEntity(url, orderStatusDto, Object.class);
+        ResponseEntity<Object> response = plainRestTemplate.postForEntity(url, orderStatusDto, Object.class);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/create-order")

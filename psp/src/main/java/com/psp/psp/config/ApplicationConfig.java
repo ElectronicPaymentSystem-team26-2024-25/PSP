@@ -26,4 +26,9 @@ public class ApplicationConfig {
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }
+
+    @Bean
+    public RestTemplate plainRestTemplate() {
+        return new RestTemplate();
+    }
 }
