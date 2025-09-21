@@ -10,6 +10,8 @@ import com.psp.psp.dto.subscriptions.SubscriptionsDto;
 import com.psp.psp.enumerations.PaymentStatus;
 import com.psp.psp.model.*;
 import com.psp.psp.repository.interfaces.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ public class PaymentService {
     IMerchantOrderRepository iMerchantOrderRepository;
     @Autowired
     IMerchantBankRepository iMerchantBankRepository;
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
 
     public PaymentService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository, IPaymentManagementRepository iPaymentManagementRepository) {
         this.iMerchantRepository = iMerchantRepository;
@@ -56,6 +59,8 @@ public class PaymentService {
                             "Payment method not found for subscription NAME: " + subscription.getName())
                     );
             Subscription paymentSubscription = new Subscription(merchant.getId(), method.getId());
+            log.info("Merchant {} is subscribed to payment method with id {}",
+                    subscriptionsDto.getMerchantEmail(), paymentSubscription.getPaymentMethodId());
             iPaymentSubscriptionRepository.save(paymentSubscription);
         });
         return subscriptionsDto;
@@ -88,6 +93,8 @@ public class PaymentService {
         OrderStatusDto orderDTO = new OrderStatusDto();
         orderDTO.setOrderId(bankResponse.getMerchantOrderId());
         orderDTO.setOrderStatus(bankResponse.getStatus().toString());
+        log.warn("Order {} finished with status {}",
+                order.getMerchantOrderId(), order.getOrderStatus());
         return orderDTO;
     }
     public MerchantInfoDto getMerchantInfo(String merchantId){
@@ -101,6 +108,8 @@ public class PaymentService {
         MerchantOrder order = iMerchantOrderRepository.getReferenceById(orderId);
         FailReasonDto reason = new FailReasonDto();
         reason.setFailReason(order.getFailReason());
+        log.warn("Order {} failed due to {}",
+                orderId, reason.getFailReason());
         return reason;
     }
 

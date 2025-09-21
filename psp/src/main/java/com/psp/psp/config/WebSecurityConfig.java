@@ -34,16 +34,18 @@ public class WebSecurityConfig{
         http.cors(cors -> cors.configurationSource(corsConfiguration()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/**",
-                                        "/",
-                                        "/home",
-                                        "paymentMethod/**",
-                                        "/payment/merchant/**",
-                                        "/payment/capture-payment/**",
-                                        "/payment/execute-payment/**",
-                                        "payment/order-status",
-                                        "payment/create-order",
-                                        "payment/order/**")
+                auth.requestMatchers("/auth/**",
+                                "/", 
+                                "/home",
+                                "paymentMethod/**",
+                                "/payment/merchant/**",
+                                "payment/order-status",
+                                "payment/create-order",
+                                "payment/order/**",
+                                "/payment/order-status/**",          // callback iz crypto servisa
+                                "/payment/merchant/subscribed"  ,
+                                "/payment/execute-payment/**",
+                                "/payment/capture-payment")
                                 .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -55,8 +57,10 @@ public class WebSecurityConfig{
     @Bean
     CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("https://localhost:4200"));
+        
+        configuration.setAllowedOrigins(List.of("https://localhost:4200",
+                "https://localhost:8095"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT","DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));

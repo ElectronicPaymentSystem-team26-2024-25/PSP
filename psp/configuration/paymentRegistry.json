@@ -1,7 +1,4 @@
 [
-  {
-    "id": 1,
-    "name": "PayPal",
-    "address": "http://localhost:90"
-  }
+  { "id": 1, "name": "PayPal",        "address": "http://localhost:90" },
+  { "id": 3, "name": "CryptoPayment", "address": "http://localhost:8095" }
 ]

@@ -81,10 +81,10 @@ export class PaymentGatewayComponent implements OnInit{
     );
   }
   executePayment(){
-    if(this.selectedPaymentMethod.type === PaymentType.crypto){
+    if(this.selectedPaymentMethod.type === PaymentType.wallet){
       this.executePaymentWithPayPal()
     }
-    
+
     let paymentRequest: PaymentExecutionRequest = {merchantId: '', merchantPassword: '', amount: 0, errorUrl: '', failedUrl: '', merchantOrderId: 0, merchantTimestamp: new Date, successUrl: '', path: ''}
     paymentRequest.merchantId = this.merchantOrder?.merchantId!
     paymentRequest.amount = this.merchantOrder?.amount!
@@ -97,6 +97,13 @@ export class PaymentGatewayComponent implements OnInit{
     if(this.selectedPaymentMethod.type == PaymentType.bank){
       this.executePaymentInBank(paymentRequest)
     }
+
+    if (this.selectedPaymentMethod.type === PaymentType.crypto) {
+    // CRYPTO: minimalna izmena – samo postavi path na crypto init
+    paymentRequest.path = `api/crypto/payment`;
+    this.redirectViaPsp(paymentRequest);
+    return;
+  }
   }
 
   executePaymentWithPayPal() : void {
@@ -135,4 +142,18 @@ export class PaymentGatewayComponent implements OnInit{
       }
     })
   }
+
+  /** Jedinstveno slanje ka PSP-u i redirect na paymentUrl (bank i crypto dele isti tok) */
+  private redirectViaPsp(paymentRequest: PaymentExecutionRequest) {
+    this.paymentService.sendBankPaymentRequest(paymentRequest, this.merchantInfo?.port || '')
+      .subscribe({
+        next: (response: PaymentExecutionResponse) => {
+          window.location.href = response.paymentUrl;
+        },
+        error: () => {
+          alert('Error while reaching payment processor');
+        }
+      });
+  }
+
 }

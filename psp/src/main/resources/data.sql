@@ -5,8 +5,8 @@ INSERT INTO public.merchants (merchant_id, merchant_password, business_name, bus
 
 INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_active) VALUES (1, 1, true);
 INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_active) VALUES (1, 2, true);
-INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_active) VALUES (1, 3, false);
-
+INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_active) VALUES (1, 3, true);
+INSERT INTO public.payment_subscriptions (merchant_id, payment_method_id, is_active) VALUES (1, 4, false);
 INSERT INTO public.merchant_bank (ID, MERCHANT_ID, MERCHANT_PASSWORD, PORT, BANK_NAME)
 VALUES (1, '123e4567-e89b-12d3-a456-426614174000', '789e1234-e89b-56d3-a456-426614174111', '8060', 'Banka 1');
 
