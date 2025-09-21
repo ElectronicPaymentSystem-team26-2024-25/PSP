@@ -22,7 +22,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     // bez tokena – NE dodaj Authorization header
-    return next.handle(req);
+    return next.handle(request);
   }
 }
 
