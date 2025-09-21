@@ -1,6 +1,7 @@
 package com.psp.psp.config;
 
 import com.psp.psp.repository.interfaces.IUserRepository;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,9 @@ public class ApplicationConfig {
     UserDetailsService userDetailsService(){
         return iUserRepository::findByEmail;
     }
+
     @Bean
+    @LoadBalanced
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }
