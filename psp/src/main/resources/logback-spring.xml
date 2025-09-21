@@ -1,0 +1,39 @@
+<configuration scan="true">
+
+    <!-- Appender for application logs -->
+    <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender for system logs -->
+    <appender name="SYSTEM_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/system.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/system-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Turn off logs from PspApplication -->
+    <logger name="com.psp.psp.PspApplication" level="OFF" additivity="false" />
+
+    <logger name="com.psp.psp" level="DEBUG" additivity="false">
+        <appender-ref ref="APP_FILE"/>
+    </logger>
+
+    <!-- System/framework logs -->
+    <root level="INFO">
+        <appender-ref ref="SYSTEM_FILE"/>
+    </root>
+
+</configuration>

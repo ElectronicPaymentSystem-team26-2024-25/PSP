@@ -7,6 +7,8 @@ import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IPaymentManagementRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
 import jdk.jfr.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class PaymentManagementService {
 
     private final IPaymentManagementRepository repository;
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
+    private static final Logger log = LoggerFactory.getLogger(PaymentManagementService.class);
 
     public PaymentManagementService(IPaymentManagementRepository repository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository) {
         this.repository = repository;
@@ -31,6 +34,8 @@ public class PaymentManagementService {
             repository.deleteById(id);
             List<Subscription> subscriptionsToDelete = iPaymentSubscriptionRepository.findByPaymentMethodId(id);
             subscriptionsToDelete.forEach(iPaymentSubscriptionRepository::delete);
+            log.info("Payment method with ID {} have been deleted",
+                    id);
             return true;
         }
         catch (Exception e) {
@@ -70,6 +75,8 @@ public class PaymentManagementService {
             PaymentMethod method = PaymentMethodConverter.convertFromDto(paymentDto);
             method.setId(null);
             PaymentMethod saved = repository.saveAndFlush(method);
+            log.info("Payment method {} created",
+                    paymentDto.getName());
             return ResponseEntity.ok(PaymentMethodConverter.convertToDto(saved));
         }
         catch (IllegalArgumentException e) {

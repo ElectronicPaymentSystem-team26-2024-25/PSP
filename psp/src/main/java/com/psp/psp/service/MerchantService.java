@@ -13,6 +13,8 @@ import com.psp.psp.model.Subscription;
 import com.psp.psp.repository.interfaces.IMerchantRepository;
 import com.psp.psp.repository.interfaces.IPaymentManagementRepository;
 import com.psp.psp.repository.interfaces.IPaymentSubscriptionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,8 @@ public class MerchantService {
     private final IPaymentSubscriptionRepository iPaymentSubscriptionRepository;
     private final IPaymentManagementRepository iPaymentManagementRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(MerchantService.class);
+
 
     public MerchantService(IMerchantRepository iMerchantRepository, IPaymentSubscriptionRepository iPaymentSubscriptionRepository, IPaymentManagementRepository iPaymentManagementRepository) {
         this.iMerchantRepository = iMerchantRepository;
@@ -40,6 +44,8 @@ public class MerchantService {
         if(subscription == null) throw new IllegalArgumentException("Subscription not found.");
         subscription.setActive(!subscription.isActive());
         iPaymentSubscriptionRepository.save(subscription);
+        log.info("Status of subscription {} changed to {} for merchant {}",
+                subscriptionDto.getPaymentMethodName(), subscription.isActive(), subscription.getMerchantId());
         return SubscriptionConverter.toDto(subscription, subscriptionDto.getPaymentMethodName());
     }
 
