@@ -19,6 +19,7 @@ export class PaymentGatewayComponent implements OnInit{
   merchantOrder?: MerchantOrder
   merchantInfo?: MerchantInfo
   
+
   selectedPaymentMethod: PaymentMethod = {
     id: 0,
     name: '',
@@ -26,6 +27,10 @@ export class PaymentGatewayComponent implements OnInit{
     address: '',
     endpoint: ''
   };
+
+  bankMethods: PaymentMethod[] = [];
+  walletMethods: PaymentMethod[] = [];
+  cryptoMethods: PaymentMethod[] = [];
 
   subscription: Subscriptions = {
     merchantEmail: '',
@@ -42,6 +47,10 @@ export class PaymentGatewayComponent implements OnInit{
       this.paymentService.getMerchantsSubscribed(token).subscribe({
         next: (response: Subscriptions) => {
           this.subscription = response;
+          const allMethods = response.paymentMethods || [];
+          this.bankMethods = allMethods.filter(m => m.type.toString() === 'bank');
+          this.walletMethods = allMethods.filter(m => m.type.toString() === 'wallet');
+          this.cryptoMethods = allMethods.filter(m => m.type.toString() === 'crypto');
         }
       })
       this.paymentService.getOrder(this.orderLink).subscribe({
@@ -63,23 +72,6 @@ export class PaymentGatewayComponent implements OnInit{
       this.selectedPaymentMethod = method;
   }
 
-  get bankMethods(): PaymentMethod[] {
-    return this.subscription.paymentMethods.filter(
-      (method) => method.type === PaymentType.bank
-    );
-  }
-
-  get walletMethods(): PaymentMethod[] {
-    return this.subscription.paymentMethods.filter(
-      (method) => method.type === PaymentType.wallet
-    );
-  }
-
-  get cryptoMethods(): PaymentMethod[] {
-    return this.subscription.paymentMethods.filter(
-      (method) => method.type === PaymentType.crypto
-    );
-  }
   executePayment(){
     if(this.selectedPaymentMethod.type === PaymentType.wallet){
       this.executePaymentWithPayPal()

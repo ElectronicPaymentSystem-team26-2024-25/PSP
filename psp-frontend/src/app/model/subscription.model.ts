@@ -25,9 +25,9 @@ export interface PaymentMethod{
 }
 
 export enum PaymentType{
-    bank,
-    wallet,
-    crypto
+    bank = 'bank',
+    wallet = 'wallet',
+    crypto = 'crypto'
 }
 
 export function PaymentTypeToString(type: PaymentType): string {
