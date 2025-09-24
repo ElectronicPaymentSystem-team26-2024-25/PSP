@@ -45,6 +45,7 @@ public class WebSecurityConfig{
                                 "/payment/order-status/**",          // callback iz crypto servisa
                                 "/payment/merchant/subscribed"  ,
                                 "/payment/execute-payment/**",
+                                "/payment/process-payment/**",
                                 "/payment/capture-payment")
                                 .permitAll()
                         .anyRequest().authenticated())

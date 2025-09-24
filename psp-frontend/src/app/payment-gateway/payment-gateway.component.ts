@@ -90,12 +90,11 @@ export class PaymentGatewayComponent implements OnInit{
       this.executePaymentInBank(paymentRequest)
     }
 
+    // Crypto now mirrors PayPal: use PayPalRequest + PaymentApproveLink
     if (this.selectedPaymentMethod.type === PaymentType.crypto) {
-    // CRYPTO: minimalna izmena – samo postavi path na crypto init
-    paymentRequest.path = `api/crypto/payment`;
-    this.redirectViaPsp(paymentRequest);
-    return;
-  }
+      this.executePaymentWithCryptoLikePayPal();
+      return;
+    }
   }
 
   executePaymentWithPayPal() : void {
@@ -133,6 +132,30 @@ export class PaymentGatewayComponent implements OnInit{
         alert('error while reaching bank')
       }
     })
+  }
+
+  // --- NEW: crypto uses PayPal models and flow ---
+  private executePaymentWithCryptoLikePayPal(): void {
+    const merchantOrderId = this.merchantOrder?.merchantId || "";
+    const request: PayPalRequest = {
+      merchantId: merchantOrderId,
+      amount: String(this.merchantOrder?.amount) || "",
+      merchantOrderId: String(this.merchantOrder?.merchantOrderId) || "",
+      merchantTimestamp: this.merchantOrder?.merchantTimestamp!,
+      sucessUrl: frontend_url + '/success/' + merchantOrderId,
+      errorUrl:  frontend_url + '/error/'  + merchantOrderId,
+      failedUrl: frontend_url + '/fail/'   + merchantOrderId,
+      brandName: "Telekom Inc."
+    };
+    this.paymentService.sendCryptoAsPayPalRequest(request).subscribe({
+      next: (response: PaymentApproveLink) => {
+        // response.message is the approval/checkout URL (just like PayPal)
+        window.location.href = response.message;
+      },
+      error: () => {
+        alert('Error while reaching crypto processor');
+      }
+    });
   }
 
   /** Jedinstveno slanje ka PSP-u i redirect na paymentUrl (bank i crypto dele isti tok) */

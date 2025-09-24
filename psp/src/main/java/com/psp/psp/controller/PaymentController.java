@@ -152,4 +152,43 @@ public class PaymentController {
         FailReasonDto dto = paymentService.getFailReason(Integer.parseInt(orderId));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+    // inside com.psp.psp.controller.PaymentController
+
+    @PostMapping("/process-payment/crypto")
+    public ResponseEntity<com.psp.psp.dto.payments.PaymentApproveLinkDto> processCryptoLikePayPal(
+            @RequestBody com.psp.psp.dto.payments.PayPalRequestDto request) {
+
+        java.math.BigDecimal amount;
+        try {
+            amount = new java.math.BigDecimal(request.getAmount());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        com.psp.psp.dto.payments.CryptoInitForwardRequest forward =
+                new com.psp.psp.dto.payments.CryptoInitForwardRequest(
+                        request.getMerchantOrderId(),
+                        amount,
+                        "RSD",  // or pull from elsewhere if you track currency per order
+                        request.getSucessUrl(),
+                        request.getFailedUrl(),
+                        request.getErrorUrl()
+                );
+
+        String url = "http://crypto-payment/api/crypto/payment"; // serviceId registered in Eureka
+
+
+        ResponseEntity<com.psp.psp.dto.payments.PaymentResponse> resp =
+                restTemplate.postForEntity(url, forward, com.psp.psp.dto.payments.PaymentResponse.class);
+
+        if (!resp.getStatusCode().is2xxSuccessful() || resp.getBody() == null) {
+            return ResponseEntity.status(resp.getStatusCode()).build();
+        }
+
+        String paymentUrl = resp.getBody().getPaymentUrl();
+
+        // Return PayPal-style envelope back to FE
+        return ResponseEntity.ok(new com.psp.psp.dto.payments.PaymentApproveLinkDto(paymentUrl));
+    }
+
 }

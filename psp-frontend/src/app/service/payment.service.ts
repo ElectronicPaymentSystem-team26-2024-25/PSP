@@ -32,12 +32,17 @@ export class PaymentService {
   getMerchantsSubscribed(merchantPassword: string): Observable<Subscriptions>{
     return this.http.get<Subscriptions>(environment.apiHost + "payment/merchant/subscribed?merchantPassword=" + merchantPassword)
   }
+
   sendBankPaymentRequest(paymentRequest: PaymentExecutionRequest, bankPort: string): Observable<PaymentExecutionResponse>{
     return this.http.post<PaymentExecutionResponse>(environment.apiHost + "payment/execute-payment", paymentRequest)
   }
 
   sendPayPalRequest(request: PayPalRequest): Observable<PaymentApproveLink>{
     return this.http.post<PaymentApproveLink>(environment.apiHost + "payment/process-payment/" + PaymentType.wallet, request)
+  }
+
+  sendCryptoAsPayPalRequest(request: PayPalRequest): Observable<PaymentApproveLink> {
+    return this.http.post<PaymentApproveLink>(environment.apiHost + "payment/process-payment/" + PaymentType.crypto, request);
   }
 
   capturePayPalPayment(orderId: string): Observable<PayPalResponse> {
@@ -47,9 +52,11 @@ export class PaymentService {
   getOrder(orderLink: string): Observable<MerchantOrder>{
     return this.http.get<MerchantOrder>(environment.apiHost + "payment/order/"+orderLink)
   }
+
   getMerchantInfo(merchantId: string): Observable<MerchantInfo>{
     return this.http.get<MerchantInfo>(environment.apiHost + "payment/merchant/"+merchantId)
   }
+
   getFailReason(orderId: string): Observable<FailReason>{
     return this.http.get<FailReason>(environment.apiHost + "payment/fail/"+orderId)
   }

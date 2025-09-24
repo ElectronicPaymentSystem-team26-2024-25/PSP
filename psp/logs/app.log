@@ -3,3 +3,4 @@
 2025-09-21 21:26:04 WARN  [https-jsse-nio-8080-exec-9] com.psp.psp.service.PaymentService - Order 197 finished with status SUCCESS
 2025-09-21 21:48:03 WARN  [https-jsse-nio-8080-exec-3] com.psp.psp.service.PaymentService - Order 200 finished with status SUCCESS
 2025-09-21 21:48:44 WARN  [https-jsse-nio-8080-exec-10] com.psp.psp.service.PaymentService - Order 201 finished with status SUCCESS
+2025-09-24 19:33:58 DEBUG [main] c.p.p.c.filter.JwtSecurityFilter - Filter 'jwtSecurityFilter' configured for use
